@@ -1,0 +1,3 @@
+## Introduction
+
+The rapidminer-code-style plugin is designed to ...
