@@ -37,6 +37,17 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				def configurationFile = new File(configurationDir.absolutePath, codeQuality.configFileName)
 				def headerFile = new File(configurationDir.absolutePath, codeQuality.javaHeaderFileName)
 
+				// Create prepend header tasks
+				def prependTasks = []
+				project.sourceSets.each  { set ->
+					PrependHeaderTask t = tasks.create(name: 'prependHeaderJava' + set.name.capitalize(), type: PrependHeaderTask)
+					t.sourceSet = set
+					t.headerFile = headerFile
+					prependTasks << t
+				}
+				tasks.create(name: 'prependHeaderJavaAll', dependsOn: prependTasks)
+				
+				// Confige checkstyle tasks
 				// Ensure that config files will be copied if default config should be used
 				if(codeQuality.useDefaultConfig) {
 					check.dependsOn checkstyleInitDefault

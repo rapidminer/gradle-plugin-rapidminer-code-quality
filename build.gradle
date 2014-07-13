@@ -1,8 +1,5 @@
 apply plugin: 'groovy'
 apply plugin: 'rapidminer-publish'
-apply plugin: 'application'
-
-mainClassName = "com.rapidminer.gradle.InitCheckstyleFiles"
 
 buildscript {
 	dependencies {
