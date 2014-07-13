@@ -6,7 +6,9 @@ package com.rapidminer.gradle;
  *
  */
 public class CodeQualityConfiguration {
-	File testConfigFile
-	File mainConfigFile
-	File javaHeaderFile
+	String configDir = "config/checkstyle/"
+	String configFileName = "checkstyle.xml"
+	String javaHeaderFileName = "java.header"
+	boolean useDefaultConfig = true
+	boolean ignoreErrors = false
 }

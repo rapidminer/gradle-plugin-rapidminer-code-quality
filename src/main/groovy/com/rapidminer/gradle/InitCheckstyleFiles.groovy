@@ -7,23 +7,21 @@ import java.nio.file.Files;
 
 class InitCheckstyleFiles extends DefaultTask {
 
-	@OutputFile
-	checkstyleConfigOutput = project.file(project.buildDir.absolutePath + "/checkstyle/checkstyle.xml")
-	
-	@OutputFile
-	checkstyleTransformerFile = project.file(project.buildDir.absolutePath + "/checkstyle/checkstyle.xsl")
+	File configDir
+	File checkstyleFile
 	
 	@TaskAction
 	private void copyCheckstyleConfigFiles() {
-		// check if $buildDir/checkstyle folder exists, otherwise create it
-		def parent = new File(checkstyleConfigOutput.parent)
-		if(!parent.exists()) {
-			parent.mkdirs()
+		// check if configDir folder exists, otherwise create it
+		if(!configDir.exists()) {
+			configDir.mkdirs()
 		}
+		
 		// write checkstyle.xml
-		getClass().getResource("checkstyle.xml").withInputStream { ris -> checkstyleConfigOutput.write ris.text }
+		getClass().getResource("checkstyle.xml").withInputStream { ris -> checkstyleFile.write ris.text }
 
-		// write checkstyle.xsl		
+		// write checkstyle.xsl
+		def checkstyleTransformerFile = new File(configDir.absolutePath, "checkstyle.xsl")
 		getClass().getResource("checkstyle.xsl").withInputStream { ris -> checkstyleTransformerFile.write ris.text }
 	}
 }
