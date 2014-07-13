@@ -19,8 +19,8 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	@Override
 	void apply(Project project) {
 
-		// create 'extension' project extension
-		//		project.extensions.create("extensionConfig", ExtensionConfiguration)
+		// create 'codeQuality' project extension
+		project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 		project.configure(project) {
 			apply plugin: 'checkstyle'
@@ -31,24 +31,42 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 			check.dependsOn checkstyleInitConfig
 
-			project.checkstyle.configProperties = [ "headerDir" : project.file("license/") ]
-
-			checkstyleMain {
-				reports {
-					include ( '**/*.java')
-					xml { destination "${project.buildDir}/reports/checkstyle/main.xml" }
+			afterEvaluate {
+				def headerFile = rootProject.file("config/java.header")
+				if(codeQuality.javaHeaderFile) {
+					headerFile = codeQuality.javaHeaderFile
 				}
-				configFile = file("$buildDir/checkstyle/checkstyle.xml")
-			}
-
-			checkstyleTest {
-				reports {
-					include ( '**/*.java')
-					xml { destination "${project.buildDir}/reports/checkstyle/test.xml" }
+				if(!headerFile.exists()) {
+					throw new RuntimeException("Could not find Java header file at " + headerFile)
 				}
-				configFile = file("$buildDir/checkstyle/checkstyle.xml")
+				project.checkstyle.configProperties = [ "headerFile" :  headerFile ]
+				
+				checkstyleMain {
+					reports {
+						include ( '**/*.java')
+						xml { destination "${project.buildDir}/reports/checkstyle/main.xml" }
+					}
+					if(codeQuality.mainConfigFile) {
+						configFile = codeQuality.mainConfigFile
+					} else {
+						configFile = file("$buildDir/checkstyle/checkstyle.xml")
+					}
+				}
+	
+				checkstyleTest {
+					reports {
+						include ( '**/*.java')
+						xml { destination "${project.buildDir}/reports/checkstyle/test.xml" }
+					}
+					if(codeQuality.testConfigFile) {
+						configFile = codeQuality.testConfigFile
+					} else {
+						configFile = file("$buildDir/checkstyle/checkstyle.xml")
+					}
+				}
 			}
-
+			
+			
 			gradle.taskGraph.afterTask {Task task, TaskState state ->
 				if(state.failure) {
 					if (task.name in [
@@ -65,15 +83,15 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		}
 
 	}
-	
+
 	void checkstyleReport(project, buildDir, checkType) {
 		def ceckstyleOut = project.file("$buildDir/reports/checkstyle/${checkType}.xml")
 		if (ceckstyleOut.exists()) {
 			project.ant.xslt(
-				in: "$buildDir/reports/checkstyle/${checkType}.xml",
-				style:"target/checkstyle/checkstyle.xsl",
-				out:"$buildDir/reports/checkstyle/checkstyle_${checkType}.html"
-			)
+					in: "$buildDir/reports/checkstyle/${checkType}.xml",
+					style:"target/checkstyle/checkstyle.xsl",
+					out:"$buildDir/reports/checkstyle/checkstyle_${checkType}.html"
+					)
 		}
 	}
 
