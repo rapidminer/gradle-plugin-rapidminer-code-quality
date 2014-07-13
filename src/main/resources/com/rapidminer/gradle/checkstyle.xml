@@ -39,7 +39,6 @@
 		<module name="EmptyStatement" />
 		<module name="EqualsHashCode" />
 		<module name="ExplicitInitialization" />
-		<module name="FinalLocalVariable" />
 		<module name="HiddenField" />
 		<module name="IllegalInstantiation" />
 		<module name="IllegalThrows" />
