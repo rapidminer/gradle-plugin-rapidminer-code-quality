@@ -1,5 +1,4 @@
 ## Introduction
-
 The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks. The checks are performed via checkstyle (http://checkstyle.sourceforge.net/).
 
 The plugin ships with a preconfigured checkstyle configuration which is used by default.
@@ -44,3 +43,16 @@ The plugin ships with a preconfigured checkstyle configuration which is used by 
 		 */
 		ignoreErrors = false
 	}
+	
+## Applied Plugins
+- checkstyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
+
+## Added Tasks
+##### checkstyleInitDefault
+Copies the default checkstyle config file to the directory specified by configDir. Will be executed before check tasks if useDefaultConfig is set to true.
+
+##### prependHeaderJavaAll
+Executes all *preependHeaderJavaSOURCE* tasks.
+
+##### prependHeaderJavaSOURCE
+For each source set configuration a task is added. When executing the task the header specified in the javaHeaderFileName is prepended to each *.java file of the selected source set. The new header will replace the old header (if present).
