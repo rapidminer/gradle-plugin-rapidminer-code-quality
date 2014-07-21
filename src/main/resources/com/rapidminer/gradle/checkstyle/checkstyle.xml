@@ -135,11 +135,6 @@
 		<module name="FileContentsHolder" />
 	</module>
 
-	<!-- Check for correct Java file headers -->
-	<module name="Header">
-		<property name="headerFile" value="${headerFile}" />
-	</module>
-
 	<!-- allows suppressing using the //CHECKSTYLE:ON //CHECKSTYLE:OFF -->
 	<module name="SuppressionCommentFilter" />
 </module>
