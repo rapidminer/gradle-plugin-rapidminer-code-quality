@@ -27,7 +27,7 @@ public class CodeQualityConfiguration {
 	 * Defines the name of the Codenarc configuration file.
 	 * It has to be placed in $configDir/codenarc/
 	 */
-	String codenarcFileName = "codenarc.conf"
+	String codenarcConfigFileName = "codenarc.conf"
 	
 	/**
 	 * Defines whether a build should fail on Codenarc errors.

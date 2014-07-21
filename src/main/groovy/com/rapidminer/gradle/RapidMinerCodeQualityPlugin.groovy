@@ -7,6 +7,7 @@ import org.gradle.api.Task
 import org.gradle.api.tasks.TaskState
 
 import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles;
+import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles;
 
 
 /**
@@ -17,9 +18,14 @@ import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles;
 class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private static final String TASK_GROUP = 'RapidMiner Code Quality'
-	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String ALL_JAVA = '**/*.java'
+
+	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String INIT_CHECKSTYLE_CONFIG_TASK = 'checkstyleInitDefaultConfig'
+
+	private static final String CODENARC = 'codenarc'
+	private static final String INIT_CODENARC_CONFIG_TASK = 'codenarcInitDefaultConfig'
+
 
 	@Override
 	void apply(Project project) {
@@ -33,16 +39,55 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		// add checkstyle plugin tasks
 		configureCheckstyle(project, ext, configurationDir)
 
-//		// Create prepend header tasks
-//		def prependTasks = []
-//		project.sourceSets.each  { set ->
-//			PrependHeaderTask t = project.tasks.create(name: 'prependHeaderJava' + set.name.capitalize(), type: PrependHeaderTask)
-//			t.sourceSet = set
-//			t.headerFile = headerFile
-//			prependTasks << t
-//		}
-//		tasks.create(name: 'prependHeaderJavaAll', dependsOn: prependTasks)
+		// add codenarc plugin tasks of project is a groovy project
+		configureCodenarc(project, ext, configurationDir)
 
+		//		// Create prepend header tasks
+		//		def prependTasks = []
+		//		project.sourceSets.each  { set ->
+		//			PrependHeaderTask t = project.tasks.create(name: 'prependHeaderJava' + set.name.capitalize(), type: PrependHeaderTask)
+		//			t.sourceSet = set
+		//			t.headerFile = headerFile
+		//			prependTasks << t
+		//		}
+		//		tasks.create(name: 'prependHeaderJavaAll', dependsOn: prependTasks)
+
+	}
+
+	private void configureCodenarc(Project project, CodeQualityConfiguration ext, File configurationDir) {
+		if(!project.plugins.withType(org.gradle.api.plugins.GroovyPlugin)) {
+			project.logger.info("${project.name} is no Groovy project. Skipping application of Codenarc plugin.")
+			return
+		}
+		project.configure(project) {
+			apply plugin: CODENARC
+
+			// ensure codenarc config file is in place
+			tasks.create(name: INIT_CODENARC_CONFIG_TASK, type: InitCodenarcConfigFiles)
+			codenarcInitDefaultConfig.group = TASK_GROUP
+			codenarcInitDefaultConfig.description = "Copies the default codenarc.conf files to " +
+					"the configured configuration directory."
+
+			def codenarcConfigDir = new File(configurationDir.absolutePath, CODENARC)
+					
+			// Configure codenarc tasks
+			if(ext.codenarcUseDefaultConfig) {
+				project.tasks.each { t ->
+					if(t.name != INIT_CODENARC_CONFIG_TASK && t.name.startsWith(CODENARC)) {
+						t.dependsOn codenarcInitDefaultConfig
+					}
+				}
+				codenarcInitDefaultConfig {
+					configDir = codenarcConfigDir
+					codenarcFileName = ext.codenarcConfigFileName
+				}
+			}
+
+			codenarc {
+				ignoreFailures = ext.codenarcIgnoreErrors
+				configFile = new File(codenarcConfigDir.absolutePath, ext.codenarcConfigFileName)
+			}
+		}
 	}
 
 	private void configureCheckstyle(Project project, CodeQualityConfiguration ext, File configurationDir) {
@@ -53,7 +98,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			tasks.create(name: INIT_CHECKSTYLE_CONFIG_TASK, type: InitCheckstyleConfigFiles)
 			checkstyleInitDefaultConfig.group = TASK_GROUP
 			checkstyleInitDefaultConfig.description = "Copies the default checkstyle.xml files to " +
-														"the configured configuration directory."
+					"the configured configuration directory."
 
 			def checkstyleConfigDir = new File(configurationDir.absolutePath, CHECKSTYLE)
 
@@ -69,13 +114,11 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					checkstyleFileName = ext.checkstyleConfigFileName
 				}
 			}
-			
+
 			def checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, ext.checkstyleConfigFileName)
 
 			checkstyleMain {
-				if(ext.checkstyleIgnoreErrors) {
-					ignoreFailures = true
-				}
+				ignoreFailures = ext.checkstyleIgnoreErrors
 				reports {
 					include (ALL_JAVA)
 					xml { destination "${project.buildDir}/reports/checkstyle/main.xml" }
@@ -84,9 +127,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			}
 
 			checkstyleTest {
-				if(ext.checkstyleIgnoreErrors) {
-					ignoreFailures = true
-				}
+				ignoreFailures = ext.checkstyleIgnoreErrors
 				reports {
 					include (ALL_JAVA)
 					xml { destination "${project.buildDir}/reports/checkstyle/test.xml" }
