@@ -34,35 +34,82 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		CodeQualityConfiguration ext = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 		def configurationDir = project.rootProject.file(ext.configDir)
-		def headerFile = new File(configurationDir.absolutePath, ext.javaHeaderFileName)
 
-		// add checkstyle plugin tasks
-		configureCheckstyle(project, ext, configurationDir)
+		if(ext.applyCheckstyle) {
+			// add checkstyle plugin tasks
+			configureCheckstyle(project, ext, configurationDir)
+		}
 
-		// add codenarc plugin tasks of project is a groovy project
-		configureCodenarc(project, ext, configurationDir)
+		if(ext.applyCodeNarc) {
+			// add codenarc plugin tasks of project is a groovy project
+			configureCodeNarc(project, ext, configurationDir)
+		}
 
 		// add header check tasks
-		configureHeaderCheck(project, ext, configurationDir)
+		if(ext.addHeaderCheckTasks) {
+			configureHeaderCheck(project, ext, configurationDir)
+		}
+
+		// add JDepend check tasks
+		if(ext.applyJDepend) {
+			configureJDepend(project, ext, configurationDir)
+		}
+
+		// add FindBugs check tasks
+		println ext.applyFindBugs
+		if(ext.applyFindBugs) {
+			configureFindBugs(project, ext, configurationDir)
+		}
+
+	}
+
+	private void configureJDepend(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
+		project.configure(project){
+			apply plugin: 'jdepend'
+
+			jdepend {
+				sourceSets = [project.sourceSets.main]
+
+				ignoreFailures = codeExt.jdependIgnoreErrors
+				reportsDir = file("${project.buildDir}/reports/jdepend")
+			}
+		}
+	}
+
+	private void configureFindBugs(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
+		project.configure(project){
+			apply plugin: 'findbugs'
+
+			findbugs {
+				sourceSets = [project.sourceSets.main]
+
+				ignoreFailures = codeExt.findbugsIgnoreErrors
+				reportsDir = file("${project.buildDir}/reports/findbugs")
+
+				effort = 'max'
+				reportLevel = 'high'
+			}
+			afterEvaluate {
+				codeExt.applyFindBugs
+			}
+		}
 	}
 
 	private void configureHeaderCheck(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
-		if(codeExt.addJavaHeaderChecks) {
-			project.configure(project) {
-				apply plugin: 'license'
+		project.configure(project) {
+			apply plugin: 'license'
 
-				license.ext.year = Calendar.getInstance().get(Calendar.YEAR) 
-				license { 
-					header rootProject.file("${codeExt.configDir}/${codeExt.javaHeaderFileName}")
-					ignoreFailures codeExt.javaHeaderIgnoreErrors
-					include ALL_JAVA
-				}
+			license.ext.year = Calendar.getInstance().get(Calendar.YEAR)
+			license {
+				header rootProject.file(codeExt.headerFile)
+				ignoreFailures codeExt.headerIgnoreErrors
+				includes([ALL_JAVA, '**/*.groovy',])
 			}
 		}
 	}
 
 
-	private void configureCodenarc(Project project, CodeQualityConfiguration ext, File configurationDir) {
+	private void configureCodeNarc(Project project, CodeQualityConfiguration ext, File configurationDir) {
 		if(!project.plugins.withType(org.gradle.api.plugins.GroovyPlugin)) {
 			project.logger.info("${project.name} is no Groovy project. Skipping application of Codenarc plugin.")
 			return

@@ -12,24 +12,33 @@ public class CodeQualityConfiguration {
 	 */
 	String configDir = "config/"
 
+	// ############### Java Header ##################
+	
 	/**
-	 * Defines whether the licene check tasks should be added.
+	 * Defines whether the header check tasks should be added.
 	 */
-	boolean addJavaHeaderChecks = true
+	boolean addHeaderCheckTasks = true
 
 	/**
-	 * The name of the file that contains the license header. 
-	 * It has to be placed in the folder defined by {@link #configDir} and 
-	 * will be used be the license check tasks if {@link #addHeaderChecks} is 
+	 * The path to the file that contains the license header. 
+	 * The path should be relative to the root folder of the root project. 
+	 * It will be used to check the file header if {@link #addHeaderChecks} is 
 	 * set to <code>true</code>.
 	 */
-	String javaHeaderFileName = "JAVA_HEADER.txt"
+	String headerFile = "config/HEADER"
 	
 	/**
 	 * Defines whether to ignore header errors
 	 */
-	boolean javaHeaderIgnoreErrors = false
+	boolean headerIgnoreErrors = false
 
+	// ############### Codenarc ##################
+	
+	/**
+	 * Defines if the CodeNarc plugin should be applied.
+	 */
+	boolean applyCodeNarc = true
+	
 	/**
 	 * Defines whether to use the shipped Codenarc config file.
 	 */
@@ -46,6 +55,13 @@ public class CodeQualityConfiguration {
 	 */
 	boolean codenarcIgnoreErrors = true
 
+	// ############### Checkstyle ##################
+	
+	/**
+	 * Defines if the checkstyle plugin should be applied.
+	 */
+	boolean applyCheckstyle = true
+	
 	/**
 	 * Defines whether to use the shipped checkstyle config file.
 	 */
@@ -61,12 +77,29 @@ public class CodeQualityConfiguration {
 	 * Defines whether a build should fail on checkstyle errors.
 	 */
 	boolean checkstyleIgnoreErrors = true
+	
+	// ############### JDepend ##################
 
-	boolean jdependDefaultConfig = true
-	String jdependFileName = "jdepend.conf"
+	/**
+	 * Defines if the JDepend plugin should be applied. Default is: true.
+	 */
+	boolean applyJDepend = true
+	
+	/**
+	 * Defines whether JDepend errors should be ignored. Default is: true
+	 */
 	boolean jdependIgnoreErrors = true
 
-	boolean findBugsUseDefaultConfig = true
-	String findbugsFileName = "findbugs.conf"
+	
+	// ############### FindBugs ##################
+	
+	/**
+	 * Defines if the FindBugs plugin should be applied. Default is: true.
+	 */
+	boolean applyFindBugs = true
+	
+	/**
+	 * Defines whether FindBugs errors should be ignored. Default is: true
+	 */
 	boolean findbugsIgnoreErrors = true
 }
