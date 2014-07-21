@@ -34,7 +34,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		CodeQualityConfiguration ext = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 		def configurationDir = project.rootProject.file(ext.configDir)
-		def headerFile = new File(configurationDir.absolutePath, ext.headerFileName)
+		def headerFile = new File(configurationDir.absolutePath, ext.javaHeaderFileName)
 
 		// add checkstyle plugin tasks
 		configureCheckstyle(project, ext, configurationDir)
@@ -42,17 +42,25 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		// add codenarc plugin tasks of project is a groovy project
 		configureCodenarc(project, ext, configurationDir)
 
-		//		// Create prepend header tasks
-		//		def prependTasks = []
-		//		project.sourceSets.each  { set ->
-		//			PrependHeaderTask t = project.tasks.create(name: 'prependHeaderJava' + set.name.capitalize(), type: PrependHeaderTask)
-		//			t.sourceSet = set
-		//			t.headerFile = headerFile
-		//			prependTasks << t
-		//		}
-		//		tasks.create(name: 'prependHeaderJavaAll', dependsOn: prependTasks)
-
+		// add header check tasks
+		configureHeaderCheck(project, ext, configurationDir)
 	}
+
+	private void configureHeaderCheck(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
+		if(codeExt.addJavaHeaderChecks) {
+			project.configure(project) {
+				apply plugin: 'license'
+
+				license.ext.year = Calendar.getInstance().get(Calendar.YEAR) 
+				license { 
+					header rootProject.file("${codeExt.configDir}/${codeExt.javaHeaderFileName}")
+					ignoreFailures codeExt.javaHeaderIgnoreErrors
+					include ALL_JAVA
+				}
+			}
+		}
+	}
+
 
 	private void configureCodenarc(Project project, CodeQualityConfiguration ext, File configurationDir) {
 		if(!project.plugins.withType(org.gradle.api.plugins.GroovyPlugin)) {
@@ -69,7 +77,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					"the configured configuration directory."
 
 			def codenarcConfigDir = new File(configurationDir.absolutePath, CODENARC)
-					
+
 			// Configure codenarc tasks
 			if(ext.codenarcUseDefaultConfig) {
 				project.tasks.each { t ->
