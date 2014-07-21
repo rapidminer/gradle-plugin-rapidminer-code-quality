@@ -18,10 +18,10 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 */
 		configDir = "config/"
 
-		// ############### Java Header ##################
+		// ############### Java & Groovy Header ##################
 		
 		/**
-		 * Defines whether the licene check tasks should be added.
+		 * Defines whether the license check tasks should be added.
 		 */
 		addJavaHeaderChecks = true
 
@@ -38,7 +38,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 */
 		javaHeaderIgnoreErrors = false
 
-		// ############### Codenarc ##################
+		// ############### CodeNarc ##################
 
 		/**
 		 * Defines whether the CodeNarc plugin should be applied. Default: true 
