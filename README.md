@@ -21,30 +21,35 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		// ############### Java & Groovy Header ##################
 		
 		/**
-		 * Defines whether the license check tasks should be added.
+		 * Defines whether the header check tasks should be added.
+		 * Can be overwritten by defining the project property 
+		 * 'headerCheck' (e.g. 'gradle check -P headerCheck=false').
 		 */
-		addJavaHeaderChecks = true
-
+		headerCheck = true
+	
 		/**
-		 * The name of the file that contains the license header. 
-		 * It has to be placed in the folder defined by {@link #configDir} and 
-		 * will be used be the license check tasks if {@link #addHeaderChecks} is 
+		 * The path to the file that contains the license header. 
+		 * The path should be relative to the root folder of the root project. 
+		 * It will be used to check the file header if {@link #addHeaderChecks} is 
 		 * set to <code>true</code>.
 		 */
-		javaHeaderFileName = "JAVA_HEADER.txt"
+		headerFile = "config/HEADER"
 		
 		/**
 		 * Defines whether to ignore header errors
 		 */
-		javaHeaderIgnoreErrors = false
+		headerCheckIgnoreErrors = false
 
 		// ############### CodeNarc ##################
 
 		/**
-		 * Defines whether the CodeNarc plugin should be applied. Default: true 
-		 * This will only take effect for Groovy plugins though.
+		 * Defines whether the CodeNarc plugin should be applied. Default: true.
+		 * Can be overwritten by defining the project property 
+		 * 'codenarc' (e.g. 'gradle check -P codenarc=false').
+		 *
+		 * CodeNarc will only be  applied for project that also apply the Groovy plugin.
 		 */
-		applyCodeNarc = true
+		codenarc = true
 		
 		/**
 		 * Defines whether to use the shipped Codenarc config file.
@@ -66,6 +71,8 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		
 		/**
 		 * Defines if the checkstyle plugin should be applied.
+		 * Can be overwritten by defining the project property 
+		 * 'checkstyle' (e.g. 'gradle check -P checkstyle=false').
 		 */
 		applyCheckstyle = true
 		
@@ -89,6 +96,8 @@ The plugin ships with preconfigured configuration files which are used by defaul
 
 		/**
 		 * Defines if the JDepend plugin should be applied. Default is: true.
+		 * Can be overwritten by defining the project property 
+		 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 		 */
 		applyJDepend = true
 		
@@ -102,6 +111,8 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		
 		/**
 		 * Defines if the FindBugs plugin should be applied. Default is: true.
+		 * Can be overwritten by defining the project property 
+		 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
 		 */
 		applyFindBugs = true
 		

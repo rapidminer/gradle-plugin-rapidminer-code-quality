@@ -17,7 +17,7 @@ public class CodeQualityConfiguration {
 	/**
 	 * Defines whether the header check tasks should be added.
 	 */
-	boolean addHeaderCheckTasks = true
+	boolean headerCheck = true
 
 	/**
 	 * The path to the file that contains the license header. 
@@ -30,14 +30,18 @@ public class CodeQualityConfiguration {
 	/**
 	 * Defines whether to ignore header errors
 	 */
-	boolean headerIgnoreErrors = false
+	boolean headerCheckIgnoreErrors = false
 
 	// ############### Codenarc ##################
 	
 	/**
-	 * Defines if the CodeNarc plugin should be applied.
+	 * Defines whether the CodeNarc plugin should be applied. Default: true.
+	 * Can be overwritten by defining the project property 
+	 * 'codenarc' (e.g. 'gradle check -P codenarc=false').
+	 *
+	 * CodeNarc will only be  applied for project that also apply the Groovy plugin.
 	 */
-	boolean applyCodeNarc = true
+	boolean codenarc = true
 	
 	/**
 	 * Defines whether to use the shipped Codenarc config file.
@@ -59,8 +63,10 @@ public class CodeQualityConfiguration {
 	
 	/**
 	 * Defines if the checkstyle plugin should be applied.
+	 * Can be overwritten by defining the project property 
+	 * 'checkstyle' (e.g. 'gradle check -P checkstyle=false').
 	 */
-	boolean applyCheckstyle = true
+	boolean checkstyle = true
 	
 	/**
 	 * Defines whether to use the shipped checkstyle config file.
@@ -82,8 +88,10 @@ public class CodeQualityConfiguration {
 
 	/**
 	 * Defines if the JDepend plugin should be applied. Default is: true.
+	 * Can be overwritten by defining the project property 
+	 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 	 */
-	boolean applyJDepend = true
+	boolean jdepend = false
 	
 	/**
 	 * Defines whether JDepend errors should be ignored. Default is: true
@@ -94,9 +102,11 @@ public class CodeQualityConfiguration {
 	// ############### FindBugs ##################
 	
 	/**
-	 * Defines if the FindBugs plugin should be applied. Default is: true.
+	 * Defines if the JDepend plugin should be applied. Default is: true.
+	 * Can be overwritten by defining the project property 
+	 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
 	 */
-	boolean applyFindBugs = true
+	boolean findbugs = false
 	
 	/**
 	 * Defines whether FindBugs errors should be ignored. Default is: true

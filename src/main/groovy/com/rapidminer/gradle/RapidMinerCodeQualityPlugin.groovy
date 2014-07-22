@@ -25,44 +25,54 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private static final String CODENARC = 'codenarc'
 	private static final String INIT_CODENARC_CONFIG_TASK = 'codenarcInitDefaultConfig'
-
+	
+	private static final String HEADER_CHECK = 'headerCheck'
+	private static final String JDEPEND = 'jdepend'
+	private static final String FINDBUGS = 'findbugs'
 
 	@Override
 	void apply(Project project) {
 
 		// create 'codeQuality' project extension
-		CodeQualityConfiguration ext = project.extensions.create("codeQuality", CodeQualityConfiguration)
+		CodeQualityConfiguration qualityExt = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 
 		project.afterEvaluate {
-			def configurationDir = project.rootProject.file(ext.configDir)
+			def configurationDir = project.rootProject.file(qualityExt.configDir)
 
-			if(ext.applyCheckstyle) {
+			if(applyPlugin(project, CHECKSTYLE,  qualityExt.checkstyle)) {
 				// add checkstyle plugin tasks
-				configureCheckstyle(project, ext, configurationDir)
+				configureCheckstyle(project, qualityExt, configurationDir)
 			}
 	
-			if(ext.applyCodeNarc) {
+			if(applyPlugin(project, CODENARC, qualityExt.codenarc)) {
 				// add codenarc plugin tasks of project is a groovy project
-				configureCodeNarc(project, ext, configurationDir)
+				configureCodeNarc(project, qualityExt, configurationDir)
 			}
 	
 			// add header check tasks
-			if(ext.addHeaderCheckTasks) {
-				configureHeaderCheck(project, ext, configurationDir)
+			if(applyPlugin(project, HEADER_CHECK, qualityExt.headerCheck)) {
+				configureHeaderCheck(project, qualityExt, configurationDir)
 			}
 	
 			// add JDepend check tasks
-			if(ext.applyJDepend) {
-				configureJDepend(project, ext, configurationDir)
+			if(applyPlugin(project, JDEPEND, qualityExt.jdepend)) {
+				configureJDepend(project, qualityExt, configurationDir)
 			}
 	
 			// add FindBugs check tasks
-			if(ext.applyFindBugs) {
-				configureFindBugs(project, ext, configurationDir)
+			if(applyPlugin(project, FINDBUGS, qualityExt.findbugs)) {
+				configureFindBugs(project, qualityExt, configurationDir)
 			}
 		}
-
+	}
+	
+	private boolean applyPlugin(Project project, String propertyKey, Boolean extensionValue){
+		if(project.hasProperty(propertyKey)) {
+			return Boolean.valueOf(project.getProperty(propertyKey))
+		} else {
+			return extensionValue
+		}
 	}
 
 	private void configureJDepend(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
@@ -101,7 +111,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			license.ext.year = Calendar.getInstance().get(Calendar.YEAR)
 			license {
 				header rootProject.file( { codeExt.headerFile })
-				ignoreFailures codeExt.headerIgnoreErrors
+				ignoreFailures codeExt.headerCheckIgnoreErrors
 				includes([ALL_JAVA, '**/*.groovy',])
 			}
 		}

@@ -1,5 +1,9 @@
 ## Change Log
 
+#### 0.2.1
+* By default JDepend and FindBugs will be disabled
+* Introduced project properties headerCheck, checkstyle, codenarc, jdepend, and findbugs
+
 #### 0.2.0
 * Adds JDepend for Java and Groovy projects
 * Adds FindBugs for Java and Groovy projects
