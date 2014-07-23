@@ -74,7 +74,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 * Can be overwritten by defining the project property 
 		 * 'checkstyle' (e.g. 'gradle check -P checkstyle=false').
 		 */
-		applyCheckstyle = true
+		checkstyle = true
 		
 		/**
 		 * Defines whether to use the shipped checkstyle config file.
@@ -99,7 +99,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 * Can be overwritten by defining the project property 
 		 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 		 */
-		applyJDepend = true
+		jdepend = true
 		
 		/**
 		 * Defines whether JDepend errors should be ignored. Default is: true
@@ -114,7 +114,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 * Can be overwritten by defining the project property 
 		 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
 		 */
-		applyFindBugs = true
+		findbugs = true
 		
 		/**
 		 * Defines whether FindBugs errors should be ignored. Default is: true
