@@ -1,5 +1,9 @@
 ## Change Log
 
+#### 0.2.2
+* Adds headerCheckUseRootConfig extension property
+* Adds tasks for transforming checkstyle XML reports to HTML reports
+
 #### 0.2.1
 * By default JDepend and FindBugs will be disabled
 * Introduced project properties headerCheck, checkstyle, codenarc, jdepend, and findbugs

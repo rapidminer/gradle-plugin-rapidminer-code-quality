@@ -22,10 +22,11 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String INIT_CHECKSTYLE_CONFIG_TASK = 'checkstyleInitDefaultConfig'
+	private static final String CHECKSTYLE_GEN_REPORT = 'HTMLReport'
 
 	private static final String CODENARC = 'codenarc'
 	private static final String INIT_CODENARC_CONFIG_TASK = 'codenarcInitDefaultConfig'
-	
+
 	private static final String HEADER_CHECK = 'headerCheck'
 	private static final String JDEPEND = 'jdepend'
 	private static final String FINDBUGS = 'findbugs'
@@ -44,29 +45,29 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				// add checkstyle plugin tasks
 				configureCheckstyle(project, qualityExt, configurationDir)
 			}
-	
+
 			if(applyPlugin(project, CODENARC, qualityExt.codenarc)) {
 				// add codenarc plugin tasks of project is a groovy project
 				configureCodeNarc(project, qualityExt, configurationDir)
 			}
-	
+
 			// add header check tasks
 			if(applyPlugin(project, HEADER_CHECK, qualityExt.headerCheck)) {
 				configureHeaderCheck(project, qualityExt, configurationDir)
 			}
-	
+
 			// add JDepend check tasks
 			if(applyPlugin(project, JDEPEND, qualityExt.jdepend)) {
 				configureJDepend(project, qualityExt, configurationDir)
 			}
-	
+
 			// add FindBugs check tasks
 			if(applyPlugin(project, FINDBUGS, qualityExt.findbugs)) {
 				configureFindBugs(project, qualityExt, configurationDir)
 			}
 		}
 	}
-	
+
 	private boolean applyPlugin(Project project, String propertyKey, Boolean extensionValue){
 		if(project.hasProperty(propertyKey)) {
 			return Boolean.valueOf(project.getProperty(propertyKey))
@@ -110,7 +111,11 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 			license.ext.year = Calendar.getInstance().get(Calendar.YEAR)
 			license {
-				header rootProject.file( { codeExt.headerFile })
+				if(codeExt.headerCheckUseRootConfig) {
+					header rootProject.file(codeExt.headerFile)
+				} else {
+					header project.file(codeExt.headerFile)
+				}
 				ignoreFailures codeExt.headerCheckIgnoreErrors
 				includes([ALL_JAVA, '**/*.groovy',])
 			}
@@ -158,27 +163,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		project.configure(project) {
 			apply plugin: CHECKSTYLE
 
-			// ensure checkstyle config files are in place
-			tasks.create(name: INIT_CHECKSTYLE_CONFIG_TASK, type: InitCheckstyleConfigFiles)
-			checkstyleInitDefaultConfig.group = TASK_GROUP
-			checkstyleInitDefaultConfig.description = "Copies the default checkstyle.xml files to " +
-					"the configured configuration directory."
-
 			def checkstyleConfigDir = new File(configurationDir.absolutePath, CHECKSTYLE)
-
-			// Configure checkstyle tasks
-			if(ext.checkstyleUseDefaultConfig) {
-				project.tasks.each { t ->
-					if(t.name != INIT_CHECKSTYLE_CONFIG_TASK && t.name.startsWith(CHECKSTYLE)) {
-						t.dependsOn checkstyleInitDefaultConfig
-					}
-				}
-				checkstyleInitDefaultConfig {
-					configDir = checkstyleConfigDir
-					checkstyleFileName = ext.checkstyleConfigFileName
-				}
-			}
-
 			def checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, ext.checkstyleConfigFileName)
 
 			checkstyleMain {
@@ -199,22 +184,43 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				configFile checkstyleConfigFile
 			}
 
-			gradle.taskGraph.afterTask { Task task, TaskState state ->
-				if(state.failure && task.name.startsWith(CHECKSTYLE)) {
-					def matcher = task.name =~ /^checkstyle(.*)$/
-					if (matcher.matches()) {
-						checkstyleReport(project, project.buildDir, configurationDir, matcher.group(1).toLowerCase())
+			// Gather all checkstyle tasks
+			project.tasks.findAll { t ->
+				return t.name.startsWith(CHECKSTYLE)
+			}.each { t ->
+				def type =  t.name.substring(CHECKSTYLE.length())
+				Task genReportTask = project.tasks.create(name: CHECKSTYLE + type.capitalize() + CHECKSTYLE_GEN_REPORT){
+					description 'Task that generates a HTML report from the checkstyle task result'
+					doLast {
+						checkstyleReport(project, project.buildDir, configurationDir, type.toLowerCase())
 					}
 				}
+				t.finalizedBy genReportTask
 			}
 
+			// ensure checkstyle config files are in place
+			tasks.create(name: INIT_CHECKSTYLE_CONFIG_TASK, type: InitCheckstyleConfigFiles)
+			checkstyleInitDefaultConfig.group = TASK_GROUP
+			checkstyleInitDefaultConfig.description = "Copies the default checkstyle.xml files to " +
+					"the configured configuration directory."
+
+			// Configure checkstyle tasks
+			if(ext.checkstyleUseDefaultConfig) {
+				project.tasks.each { t ->
+					if(t.name != INIT_CHECKSTYLE_CONFIG_TASK && t.name.startsWith(CHECKSTYLE)) {
+						t.dependsOn checkstyleInitDefaultConfig
+					}
+				}
+				checkstyleInitDefaultConfig {
+					configDir = checkstyleConfigDir
+					checkstyleFileName = ext.checkstyleConfigFileName
+				}
+			}
 		}
-
-
 	}
 
 	private void checkstyleReport(project, buildDir, configDir, checkType) {
-		def transformerFile = new File(configDir.absolutePath, "checkstyle.xsl")
+		def transformerFile = new File(configDir.absolutePath, "checkstyle/checkstyle.xsl")
 		if(!transformerFile.exists()){
 			project.logger.warn("Cannot generate checkstyle report HTML: XSL transformer file is missing (" + transformerFile + ")" )
 			return

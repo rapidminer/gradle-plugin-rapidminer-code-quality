@@ -40,6 +40,14 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 */
 		headerCheckIgnoreErrors = false
 
+		/**
+		 * If set to <code>true</code>, the headerFile parameter will point
+		 * to the local project instead to the root project config file.
+		 * This can be used to have different licenses in subprojects of 
+		 * a multi project build environment.
+		 */
+		boolean headerCheckUseRootConfig = true
+
 		// ############### CodeNarc ##################
 
 		/**
