@@ -19,6 +19,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private static final String TASK_GROUP = 'RapidMiner Code Quality'
 	private static final String ALL_JAVA = '**/*.java'
+	private static final String ALL_GROOVY = '**/*.groovy' 
 
 	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String INIT_CHECKSTYLE_CONFIG_TASK = 'checkstyleInitDefaultConfig'
@@ -107,7 +108,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private void configureHeaderCheck(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
 		project.configure(project) {
-			apply plugin: 'license'
+			apply plugin: 'com.github.hierynomus.license'
 
 			license.ext.year = Calendar.getInstance().get(Calendar.YEAR)
 			license {
@@ -117,7 +118,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					header project.file(codeExt.headerFile)
 				}
 				ignoreFailures codeExt.headerCheckIgnoreErrors
-				includes([ALL_JAVA, '**/*.groovy',])
+				includes([ALL_JAVA, ALL_GROOVY])
 			}
 		}
 	}

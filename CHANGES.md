@@ -1,5 +1,9 @@
 ## Change Log
 
+#### 0.2.3
+* Updated license plugin to vesion 0.11.0
+* Added Gradle 2.1 compatible plugin name 'com.rapidminer.gradle.code-quality' 
+
 #### 0.2.2
 * Adds headerCheckUseRootConfig extension property
 * Adds tasks for transforming checkstyle XML reports to HTML reports

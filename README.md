@@ -46,7 +46,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 * This can be used to have different licenses in subprojects of 
 		 * a multi project build environment.
 		 */
-		boolean headerCheckUseRootConfig = true
+		headerCheckUseRootConfig = true
 
 		// ############### CodeNarc ##################
 
