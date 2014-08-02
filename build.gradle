@@ -1,14 +1,10 @@
 buildscript {
-	dependencies {
-		classpath 'com.rapidminer.gradle:gradle-plugin:0.2.4-SNAPSHOT'
-	}
+	dependencies { classpath 'com.rapidminer.gradle:gradle-plugin:0.1.2' }
 }
 
 apply plugin: 'rapidminer-gradle-plugin'
 
-gradlePlugin {
-	id 'code-quality'
-}
+gradlePlugin { id 'code-quality' }
 
 dependencies {
 	// https://github.com/hierynomus/license-gradle-plugin

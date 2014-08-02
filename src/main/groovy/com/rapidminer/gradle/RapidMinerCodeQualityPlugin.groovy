@@ -15,11 +15,9 @@
  */
 package com.rapidminer.gradle
 
-import org.codehaus.groovy.transform.tailrec.UsedVariableTracker
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.tasks.TaskState
 
 import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles
 import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
@@ -34,7 +32,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private static final String TASK_GROUP = 'RapidMiner Code Quality'
 	private static final String ALL_JAVA = '**/*.java'
-	private static final String ALL_GROOVY = '**/*.groovy' 
+	private static final String ALL_GROOVY = '**/*.groovy'
 
 	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String INIT_CHECKSTYLE_CONFIG_TASK = 'checkstyleInitDefaultConfig'
@@ -46,6 +44,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private static final String HEADER_CHECK = 'headerCheck'
 	private static final String JDEPEND = 'jdepend'
 	private static final String FINDBUGS = 'findbugs'
+	private static final String JACOCO = 'jacoco'
 
 	@Override
 	void apply(Project project) {
@@ -57,39 +56,63 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		project.afterEvaluate {
 			def configurationDir = project.rootProject.file(qualityExt.configDir)
 
-			if(applyPlugin(project, CHECKSTYLE,  qualityExt.checkstyle)) {
-				// add checkstyle plugin tasks
-				configureCheckstyle(project, qualityExt, configurationDir)
-			}
-
-			if(applyPlugin(project, CODENARC, qualityExt.codenarc)) {
-				// add codenarc plugin tasks of project is a groovy project
-				configureCodeNarc(project, qualityExt, configurationDir)
-			}
-
 			// add header check tasks
 			if(applyPlugin(project, HEADER_CHECK, qualityExt.headerCheck)) {
 				configureHeaderCheck(project, qualityExt, configurationDir)
 			}
 
-			// add JDepend check tasks
-			if(applyPlugin(project, JDEPEND, qualityExt.jdepend)) {
-				configureJDepend(project, qualityExt, configurationDir)
+			if(project.plugins.withType(org.gradle.api.plugins.GroovyPlugin)) {
+				project.logger.info("${project.name} is a Groovy project. Only checking for Groovy code quality plugins.")
+
+				if(applyPlugin(project, CODENARC, qualityExt.codenarc)) {
+					// add codenarc plugin tasks of project is a groovy project
+					configureCodeNarc(project, qualityExt, configurationDir)
+				}
+
+				// add JaCoCo check tasks
+				if(applyPlugin(project, JACOCO, qualityExt.jacoco)) {
+					configureJaCoCo(project, qualityExt)
+				}
+			} else if(project.plugins.withType(org.gradle.api.plugins.JavaPlugin)) {
+				project.logger.info("${project.name} is a Java project. Only checking for Java code quality plugins.")
+
+				if(applyPlugin(project, CHECKSTYLE,  qualityExt.checkstyle)) {
+					// add checkstyle plugin tasks
+					configureCheckstyle(project, qualityExt, configurationDir)
+				}
+
+				// add JDepend check tasks
+				if(applyPlugin(project, JDEPEND, qualityExt.jdepend)) {
+					configureJDepend(project, qualityExt, configurationDir)
+				}
+
+				// add FindBugs check tasks
+				if(applyPlugin(project, FINDBUGS, qualityExt.findbugs)) {
+					configureFindBugs(project, qualityExt, configurationDir)
+				}
+
+				// add JaCoCo check tasks
+				if(applyPlugin(project, JACOCO, qualityExt.jacoco)) {
+					configureJaCoCo(project, qualityExt)
+				}
+			} else {
+				project.logger.warn('Project is neither a Java nor a Groovy project. Only header check plugin applied.')
 			}
 
-			// add FindBugs check tasks
-			if(applyPlugin(project, FINDBUGS, qualityExt.findbugs)) {
-				configureFindBugs(project, qualityExt, configurationDir)
-			}
 		}
 	}
 
 	private boolean applyPlugin(Project project, String propertyKey, Boolean extensionValue){
 		if(project.hasProperty(propertyKey)) {
-			return Boolean.valueOf(project.getProperty(propertyKey))
+			// TODO: add error handling if property is not a String
+			return Boolean.valueOf(project.properties[propertyKey])
 		} else {
 			return extensionValue
 		}
+	}
+
+	private void configureJaCoCo(Project project, CodeQualityConfiguration codeExt) {
+		project.configure(project){ apply plugin: 'jacoco' }
 	}
 
 	private void configureJDepend(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
@@ -140,10 +163,6 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 
 	private void configureCodeNarc(Project project, CodeQualityConfiguration ext, File configurationDir) {
-		if(!project.plugins.withType(org.gradle.api.plugins.GroovyPlugin)) {
-			project.logger.info("${project.name} is no Groovy project. Skipping application of Codenarc plugin.")
-			return
-		}
 		project.configure(project) {
 			apply plugin: CODENARC
 

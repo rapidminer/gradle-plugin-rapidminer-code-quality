@@ -131,6 +131,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 	}
 	
 ## Applied Plugins
+TODO split description for Java and for Groovy project
 - checkstyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
 - codenarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
 - findbugs (http://www.gradle.org/docs/current/userguide/findbugs_plugin.html)

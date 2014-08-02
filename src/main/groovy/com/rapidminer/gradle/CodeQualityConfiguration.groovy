@@ -103,21 +103,22 @@ public class CodeQualityConfiguration {
 	String checkstyleConfigFileName = "checkstyle.xml"
 
 	/**
-	 * Defines whether a build should fail on checkstyle errors.
+	 * Defines whether a build ignore checkstyle errors.
+	 * Default is: <code>true</code>
 	 */
 	boolean checkstyleIgnoreErrors = true
 	
 	// ############### JDepend ##################
 
 	/**
-	 * Defines if the JDepend plugin should be applied. Default is: true.
+	 * Defines if the JDepend plugin should be applied. Default is: <code>false</code>.
 	 * Can be overwritten by defining the project property 
 	 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 	 */
 	boolean jdepend = false
 	
 	/**
-	 * Defines whether JDepend errors should be ignored. Default is: true
+	 * Defines whether JDepend errors should be ignored. Default is: <code>true</code>
 	 */
 	boolean jdependIgnoreErrors = true
 
@@ -125,14 +126,23 @@ public class CodeQualityConfiguration {
 	// ############### FindBugs ##################
 	
 	/**
-	 * Defines if the JDepend plugin should be applied. Default is: true.
+	 * Defines if the FindBugs plugin should be applied. Default is: <code>false</code>.
 	 * Can be overwritten by defining the project property 
 	 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
 	 */
 	boolean findbugs = false
 	
 	/**
-	 * Defines whether FindBugs errors should be ignored. Default is: true
+	 * Defines whether FindBugs errors should be ignored. Default is: <code>true</code>
 	 */
 	boolean findbugsIgnoreErrors = true
+	
+	// ############### JaCoCo #################
+	
+	/**
+	 * Defines if the JaCoCo plugin should be applied. Default is: true.
+	 * Can be overwritten by defining the project property 
+	 * 'jacoco' (e.g. 'gradle check -P jacoco=false').
+	 */
+	boolean jacoco = true
 }

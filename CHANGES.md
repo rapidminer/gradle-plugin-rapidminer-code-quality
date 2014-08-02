@@ -3,6 +3,10 @@
 #### 0.2.3
 * Updated license plugin to vesion 0.11.0
 * Added Gradle 2.1 compatible plugin name 'com.rapidminer.gradle.code-quality' 
+* Adds JaCoCo plugin for Java and Groovy projects
+* Checkstyle plugin won't be applied to Groovy projects anymore
+* FindBugs plugin won't be applied to Groovy projects anymore
+* JDepend plugin won't be applied to Groovy projects anymore
 
 #### 0.2.2
 * Adds headerCheckUseRootConfig extension property
