@@ -145,4 +145,13 @@ public class CodeQualityConfiguration {
 	 * 'jacoco' (e.g. 'gradle check -P jacoco=false').
 	 */
 	boolean jacoco = true
+	
+	
+	// ############### PMD ################# 
+	/**
+	 * Defines if the PMD plugin should be applied. Default is: false.
+	 * Can be overwritten by defining the project property
+	 * 'pmd' (e.g. 'gradle check -P pmd=true').
+	 */
+	boolean pmd = false
 }

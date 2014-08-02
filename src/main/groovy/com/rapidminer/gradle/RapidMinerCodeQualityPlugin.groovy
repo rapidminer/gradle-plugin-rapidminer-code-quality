@@ -45,6 +45,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private static final String JDEPEND = 'jdepend'
 	private static final String FINDBUGS = 'findbugs'
 	private static final String JACOCO = 'jacoco'
+	private static final String PMD = 'pmd'
 
 	@Override
 	void apply(Project project) {
@@ -95,6 +96,11 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				if(applyPlugin(project, JACOCO, qualityExt.jacoco)) {
 					configureJaCoCo(project, qualityExt)
 				}
+				
+				// add JaCoCo check tasks
+				if(applyPlugin(project, PMD, qualityExt.pmd)) {
+					configurePMD(project, qualityExt)
+				}
 			} else {
 				project.logger.warn('Project is neither a Java nor a Groovy project. Only header check plugin applied.')
 			}
@@ -113,6 +119,10 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private void configureJaCoCo(Project project, CodeQualityConfiguration codeExt) {
 		project.configure(project){ apply plugin: 'jacoco' }
+	}
+	
+	private void configurePMD(Project project, CodeQualityConfiguration codeExt) {
+		project.configure(project){ apply plugin: 'pmd' }
 	}
 
 	private void configureJDepend(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
