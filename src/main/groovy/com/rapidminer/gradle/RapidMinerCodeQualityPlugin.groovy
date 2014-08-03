@@ -18,6 +18,8 @@ package com.rapidminer.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.plugins.quality.PmdPlugin
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles
 import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
@@ -54,7 +56,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		CodeQualityConfiguration qualityExt = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 
-		project.afterEvaluate {
+		// TODO JaCoCo does not work in afterEvaluate but 
+		// neither does project.configure work because extension isn't evaluated by then
+		project.configure(project) {
 			def configurationDir = project.rootProject.file(qualityExt.configDir)
 
 			// add header check tasks
@@ -96,7 +100,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				if(applyPlugin(project, JACOCO, qualityExt.jacoco)) {
 					configureJaCoCo(project, qualityExt)
 				}
-				
+
 				// add JaCoCo check tasks
 				if(applyPlugin(project, PMD, qualityExt.pmd)) {
 					configurePMD(project, qualityExt)
@@ -110,19 +114,23 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private boolean applyPlugin(Project project, String propertyKey, Boolean extensionValue){
 		if(project.hasProperty(propertyKey)) {
-			// TODO: add error handling if property is not a String
-			return Boolean.valueOf(project.properties[propertyKey])
+			def property = project.properties[propertyKey]
+			if(property instanceof String) {
+				return Boolean.valueOf(property)
+			} else {
+				return false
+			}
 		} else {
 			return extensionValue
 		}
 	}
 
 	private void configureJaCoCo(Project project, CodeQualityConfiguration codeExt) {
-		project.configure(project){ apply plugin: 'jacoco' }
+		project.apply plugin: JacocoPlugin
 	}
-	
+
 	private void configurePMD(Project project, CodeQualityConfiguration codeExt) {
-		project.configure(project){ apply plugin: 'pmd' }
+		project.apply plugin: PmdPlugin
 	}
 
 	private void configureJDepend(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
