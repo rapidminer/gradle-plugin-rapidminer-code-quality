@@ -56,9 +56,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		CodeQualityConfiguration qualityExt = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 
-		// TODO JaCoCo does not work in afterEvaluate but 
-		// neither does project.configure work because extension isn't evaluated by then
-		project.configure(project) {
+		project.afterEvaluate {
 			def configurationDir = project.rootProject.file(qualityExt.configDir)
 
 			// add header check tasks
