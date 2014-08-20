@@ -55,6 +55,12 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		// create 'codeQuality' project extension
 		CodeQualityConfiguration qualityExt = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
+		// Adds JaCoCo check tasks
+		// Cannot be done in afterEvaluate as this breaks the plugin tasks
+		if(applyPlugin(project, JACOCO, qualityExt.jacoco) && 
+			(project.plugins.withType(org.gradle.api.plugins.GroovyPlugin) || project.plugins.withType(org.gradle.api.plugins.JavaPlugin))){
+			configureJaCoCo(project, qualityExt)
+		}
 
 		project.afterEvaluate {
 			def configurationDir = project.rootProject.file(qualityExt.configDir)
@@ -72,10 +78,6 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					configureCodeNarc(project, qualityExt, configurationDir)
 				}
 
-				// add JaCoCo check tasks
-				if(applyPlugin(project, JACOCO, qualityExt.jacoco)) {
-					configureJaCoCo(project, qualityExt)
-				}
 			} else if(project.plugins.withType(org.gradle.api.plugins.JavaPlugin)) {
 				project.logger.info("${project.name} is a Java project. Only checking for Java code quality plugins.")
 
@@ -95,18 +97,12 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				}
 
 				// add JaCoCo check tasks
-				if(applyPlugin(project, JACOCO, qualityExt.jacoco)) {
-					configureJaCoCo(project, qualityExt)
-				}
-
-				// add JaCoCo check tasks
 				if(applyPlugin(project, PMD, qualityExt.pmd)) {
 					configurePMD(project, qualityExt)
 				}
 			} else {
-				project.logger.warn('Project is neither a Java nor a Groovy project. Only header check plugin applied.')
+				project.logger.info('Project is neither a Java nor a Groovy project. Only header check plugin applied.')
 			}
-
 		}
 	}
 
@@ -128,7 +124,15 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	}
 
 	private void configurePMD(Project project, CodeQualityConfiguration codeExt) {
-		project.apply plugin: PmdPlugin
+		project.configure(project){
+			apply plugin: 'pmd'
+		
+			pmd {
+				ignoreFailures = { codeExt.pmdIgnoreErrors }
+				sourceSets = [sourceSets.main]
+			}
+			
+		}
 	}
 
 	private void configureJDepend(Project project, CodeQualityConfiguration codeExt, File configurationDir) {

@@ -154,4 +154,9 @@ public class CodeQualityConfiguration {
 	 * 'pmd' (e.g. 'gradle check -P pmd=true').
 	 */
 	boolean pmd = false
+	
+	/**
+	 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
+	 */
+	boolean pmdIgnoreErrors = true
 }
