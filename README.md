@@ -9,7 +9,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		} 
 	}
 	 
-	apply plugin: 'rapidminer-code-quality'
+	apply plugin: 'com.rapidminer.gradle.code-quality'
 	 
 	codeQuality {
 	 
@@ -18,7 +18,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 */
 		configDir = "config/"
 
-		// ############### Java & Groovy Header ##################
+		// ############### License Header ##################
 		
 		/**
 		 * Defines whether the header check tasks should be added.
@@ -103,11 +103,11 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		// ############### JDepend ##################
 
 		/**
-		 * Defines if the JDepend plugin should be applied. Default is: true.
+		 * Defines if the JDepend plugin should be applied. Default is: false.
 		 * Can be overwritten by defining the project property 
 		 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 		 */
-		jdepend = true
+		jdepend = false
 		
 		/**
 		 * Defines whether JDepend errors should be ignored. Default is: true
@@ -118,24 +118,55 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		// ############### FindBugs ##################
 		
 		/**
-		 * Defines if the FindBugs plugin should be applied. Default is: true.
+		 * Defines if the FindBugs plugin should be applied. Default is: false.
 		 * Can be overwritten by defining the project property 
 		 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
 		 */
-		findbugs = true
+		findbugs = false
 		
 		/**
 		 * Defines whether FindBugs errors should be ignored. Default is: true
 		 */
 		findbugsIgnoreErrors = true
+		
+		// ############### JaCoCo #################
+	
+		/**
+		 * Defines if the JaCoCo plugin should be applied. Default is: true.
+		 * Can be overwritten by defining the project property 
+		 * 'jacoco' (e.g. 'gradle check -P jacoco=false').
+		 */
+		boolean jacoco = true
+	
+	
+		// ############### PMD ################# 
+		/**
+		 * Defines if the PMD plugin should be applied. Default is: false.
+		 * Can be overwritten by defining the project property
+		 * 'pmd' (e.g. 'gradle check -P pmd=true').
+		 */
+		boolean pmd = false
+		
+		/**
+		 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
+		 */
+		boolean pmdIgnoreErrors = true
 	}
 	
 ## Applied Plugins
-TODO split description for Java and for Groovy project
+
+### Java projects:
 - checkstyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
-- codenarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
 - findbugs (http://www.gradle.org/docs/current/userguide/findbugs_plugin.html)
 - jdepend (http://www.gradle.org/docs/current/userguide/jdepend_plugin.html)
+- pmd (http://www.gradle.org/docs/current/userguide/pmd_plugin.html)
+- jacoco (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
+
+### Groovy projects:
+- codenarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
+- jacoco (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
+
+### All projects:
 - license (https://github.com/hierynomus/license-gradle-plugin)
 
 ## Added Tasks
