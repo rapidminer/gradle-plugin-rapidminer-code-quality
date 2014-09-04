@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.2.4
+* Disable Jacoco by default
+
 #### 0.2.3
 * Updated license plugin to vesion 0.11.0
 * Added Gradle 2.1 compatible plugin name 'com.rapidminer.gradle.code-quality' 

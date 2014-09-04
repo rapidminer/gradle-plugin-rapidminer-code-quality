@@ -140,11 +140,11 @@ public class CodeQualityConfiguration {
 	// ############### JaCoCo #################
 	
 	/**
-	 * Defines if the JaCoCo plugin should be applied. Default is: true.
+	 * Defines if the JaCoCo plugin should be applied. Default is: false.
 	 * Can be overwritten by defining the project property 
-	 * 'jacoco' (e.g. 'gradle check -P jacoco=false').
+	 * 'jacoco' (e.g. 'gradle check -Pjacoco=true').
 	 */
-	boolean jacoco = true
+	boolean jacoco = false
 	
 	
 	// ############### PMD ################# 
