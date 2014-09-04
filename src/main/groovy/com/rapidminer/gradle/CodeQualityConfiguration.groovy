@@ -126,11 +126,11 @@ public class CodeQualityConfiguration {
 	// ############### FindBugs ##################
 	
 	/**
-	 * Defines if the FindBugs plugin should be applied. Default is: <code>false</code>.
+	 * Defines if the FindBugs plugin should be applied. Default is: <code>true</code>.
 	 * Can be overwritten by defining the project property 
-	 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
+	 * 'findbugs' (e.g. 'gradle check -P findbugs=false').
 	 */
-	boolean findbugs = false
+	boolean findbugs = true
 	
 	/**
 	 * Defines whether FindBugs errors should be ignored. Default is: <code>true</code>
@@ -149,11 +149,11 @@ public class CodeQualityConfiguration {
 	
 	// ############### PMD ################# 
 	/**
-	 * Defines if the PMD plugin should be applied. Default is: false.
+	 * Defines if the PMD plugin should be applied. Default is: true.
 	 * Can be overwritten by defining the project property
-	 * 'pmd' (e.g. 'gradle check -P pmd=true').
+	 * 'pmd' (e.g. 'gradle check -P pmd=false').
 	 */
-	boolean pmd = false
+	boolean pmd = true
 	
 	/**
 	 * Defines whether PMD errors should be ignored. Default is: <code>true</code>

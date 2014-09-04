@@ -118,11 +118,11 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		// ############### FindBugs ##################
 		
 		/**
-		 * Defines if the FindBugs plugin should be applied. Default is: false.
+		 * Defines if the FindBugs plugin should be applied. Default is: true.
 		 * Can be overwritten by defining the project property 
-		 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
+		 * 'findbugs' (e.g. 'gradle check -P findbugs=false').
 		 */
-		findbugs = false
+		findbugs = true
 		
 		/**
 		 * Defines whether FindBugs errors should be ignored. Default is: true
@@ -132,20 +132,20 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		// ############### JaCoCo #################
 	
 		/**
-		 * Defines if the JaCoCo plugin should be applied. Default is: true.
+		 * Defines if the JaCoCo plugin should be applied. Default is: false.
 		 * Can be overwritten by defining the project property 
-		 * 'jacoco' (e.g. 'gradle check -P jacoco=false').
+		 * 'jacoco' (e.g. 'gradle check -P jacoco=true').
 		 */
-		boolean jacoco = true
+		boolean jacoco = false
 	
 	
 		// ############### PMD ################# 
 		/**
-		 * Defines if the PMD plugin should be applied. Default is: false.
+		 * Defines if the PMD plugin should be applied. Default is: true.
 		 * Can be overwritten by defining the project property
-		 * 'pmd' (e.g. 'gradle check -P pmd=true').
+		 * 'pmd' (e.g. 'gradle check -P pmd=false').
 		 */
-		boolean pmd = false
+		boolean pmd = true
 		
 		/**
 		 * Defines whether PMD errors should be ignored. Default is: <code>true</code>

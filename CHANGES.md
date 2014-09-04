@@ -1,7 +1,8 @@
 ## Change Log
 
 #### 0.2.4
-* Disable Jacoco by default
+* Jacoco is now disabled by default
+* findbugs and PMD are now enabled by default
 
 #### 0.2.3
 * Updated license plugin to vesion 0.11.0
