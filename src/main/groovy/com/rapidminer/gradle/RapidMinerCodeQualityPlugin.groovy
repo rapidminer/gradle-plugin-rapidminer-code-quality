@@ -348,6 +348,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				project.plugins.withType(EclipsePlugin) {
 					project.tasks.eclipse.dependsOn eclipseCheckstyle
 
+					// ensure that checkstyle.xml is present
+					eclipseCheckstyle.dependsOn generateCheckstyleConfigTask
+
 					// Also configure checkstyle nature and buildCommand
 					eclipse.project {
 						natures 'net.sf.eclipsecs.core.CheckstyleNature'
