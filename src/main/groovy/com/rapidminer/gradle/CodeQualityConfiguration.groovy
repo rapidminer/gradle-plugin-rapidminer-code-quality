@@ -105,9 +105,9 @@ public class CodeQualityConfiguration {
 
 	/**
 	 * Defines whether a build ignore checkstyle errors.
-	 * Default is: <code>true</code>
+	 * Default is: <code>false</code>
 	 */
-	boolean checkstyleIgnoreErrors = true
+	boolean checkstyleIgnoreErrors = false
 
 	// ############### JDepend ##################
 

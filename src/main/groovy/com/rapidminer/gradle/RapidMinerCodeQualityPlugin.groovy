@@ -25,6 +25,7 @@ import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles
 import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
+import com.rapidminer.gradle.eclipse.checkstyle.CheckstyleEclipse
 import com.rapidminer.gradle.eclipse.findbugs.FindbugsEclipse
 
 
@@ -47,6 +48,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private static final String PMD = 'pmd'
 
 	private static final String CHECKSTYLE = 'checkstyle'
+	private static final String ECLIPSE_CHECKSTYLE_CONFIG_TASK = 'eclipseCheckstyle'
 	private static final String INIT_CHECKSTYLE_CONFIG_TASK = 'checkstyleInitDefaultConfig'
 	private static final String CHECKSTYLE_GEN_REPORT = 'HTMLReport'
 
@@ -184,7 +186,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			// Create task which allows to configure FindBugs Eclipse plugin
 			Task initFindbugsEclipseTask = tasks.create(name: ECLIPSE_FINDBUGS_CONFIG_TASK, type: FindbugsEclipse)
 			initFindbugsEclipseTask.group = TASK_GROUP
-			initFindbugsEclipseTask.description = "Creates FindBugs Eclipse config files for the current project."
+			initFindbugsEclipseTask.description = "Creates FindBugs Eclipse plugin config files for the current project."
 
 			// Ensure findbugs config files are copied if project applies Eclipse plugin
 			project.plugins.withType(EclipsePlugin) {
@@ -253,8 +255,8 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		project.configure(project) {
 			apply plugin: CHECKSTYLE
 
-			def checkstyleConfigDir = new File(configurationDir.absolutePath, CHECKSTYLE)
-			def checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, ext.checkstyleConfigFileName)
+			File checkstyleConfigDir = new File(configurationDir.absolutePath, CHECKSTYLE)
+			File checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, ext.checkstyleConfigFileName)
 
 			checkstyleMain {
 				ignoreFailures = ext.checkstyleIgnoreErrors
@@ -294,7 +296,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			generateCheckstyleConfigTask.description = "Copies the default checkstyle.xml files to " +
 					"the configured configuration directory."
 
-			// Configure checkstyle tasks
+			// Configure checkstyle init config tasks
 			if(ext.checkstyleUseDefaultConfig) {
 				project.tasks.each { t ->
 					if(t.name != INIT_CHECKSTYLE_CONFIG_TASK && t.name.startsWith(CHECKSTYLE)) {
@@ -305,7 +307,31 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					configDir = checkstyleConfigDir
 					checkstyleFileName = ext.checkstyleConfigFileName
 				}
+
+				// if default config should be used, also configure Eclipse plugin config file task
+				Task eclipseCheckstyle = tasks.create(name: ECLIPSE_CHECKSTYLE_CONFIG_TASK, type: CheckstyleEclipse)
+				eclipseCheckstyle.group = TASK_GROUP
+				eclipseCheckstyle.description = "Creates Checkstyle Eclipse plugin config files for the current project."
+
+				eclipseCheckstyle.configure {
+					configDir = ext.configDir
+					checkstyleFileName = ext.checkstyleConfigFileName
+				}
+
+				// Ensure findbugs config files are copied if project applies Eclipse plugin
+				project.plugins.withType(EclipsePlugin) {
+					project.tasks.eclipse.dependsOn eclipseCheckstyle
+
+					// Also configure checkstyle nature and buildCommand
+					eclipse.project {
+						natures 'net.sf.eclipsecs.core.CheckstyleNature'
+						buildCommand 'net.sf.eclipsecs.core.CheckstyleBuilder'
+					}
+				}
 			}
+
+
+
 		}
 	}
 

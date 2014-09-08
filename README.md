@@ -1,6 +1,7 @@
 ## Introduction
 The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks at RapidMiner. 
-The plugin ships with preconfigured configuration files which are used by default.
+It is meant to be work out-of-the-box without any further configuration (at least in most of the cases).
+
 The plugin depends on other plugins (e.g. the Eclipse plugin, the Java plugin, etc.) to be configured correctly.
 Therefore it should be applied after only after all other plugins have been applied.
 
@@ -165,15 +166,15 @@ Therefore it should be applied after only after all other plugins have been appl
 ## Applied Plugins
 
 ### Java projects:
-- checkstyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
-- findbugs (http://www.gradle.org/docs/current/userguide/findbugs_plugin.html)
-- jdepend (http://www.gradle.org/docs/current/userguide/jdepend_plugin.html)
-- pmd (http://www.gradle.org/docs/current/userguide/pmd_plugin.html)
-- jacoco (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
+- CheckStyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
+- FindBugs (http://www.gradle.org/docs/current/userguide/findbugs_plugin.html)
+- JDepend (http://www.gradle.org/docs/current/userguide/jdepend_plugin.html)
+- PMD (http://www.gradle.org/docs/current/userguide/pmd_plugin.html)
+- JaCoCo (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
 
 ### Groovy projects:
-- codenarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
-- jacoco (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
+- CodeNarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
+- JaCoCo (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
 
 ### All projects:
 - license (https://github.com/hierynomus/license-gradle-plugin)
@@ -187,3 +188,7 @@ Copies the default checkstyle config file to the directory specified by configDi
 
 ##### codenarcInitDefaultConfig
 Copies the default CodeNarc config file to the directory specified by configDir. Will be executed before check tasks if codenarcUseDefaultConfig is set to true.
+
+## Eclipse Plugins
+- FindBugs (http://findbugs.sourceforge.net/manual/eclipse.html)
+- CheckStyle (http://eclipse-cs.sourceforge.net/)

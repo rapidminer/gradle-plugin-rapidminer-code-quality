@@ -28,18 +28,18 @@ class InitCheckstyleConfigFiles extends DefaultTask {
 
 	@TaskAction
 	private void copyCheckstyleConfigFiles() {
+
 		// check if configDir folder exists, otherwise create it
 		if(!configDir.exists()) {
 			configDir.mkdirs()
 		}
 
-		File checkstyleFile = new File(configDir.absolutePath, checkstyleFileName)
-
 		// write checkstyle.xml
+		File checkstyleFile = new File(configDir.absolutePath, checkstyleFileName)
 		getClass().getResource(CHECKSTYLE_XML).withInputStream { ris -> checkstyleFile.write ris.text }
 
 		// write checkstyle.xsl
-		def checkstyleTransformerFile = new File(configDir.absolutePath, CHECKSTYLE_XSL)
+		File checkstyleTransformerFile = new File(configDir.absolutePath, CHECKSTYLE_XSL)
 		getClass().getResource(CHECKSTYLE_XSL).withInputStream { ris -> checkstyleTransformerFile.write ris.text }
 	}
 }
