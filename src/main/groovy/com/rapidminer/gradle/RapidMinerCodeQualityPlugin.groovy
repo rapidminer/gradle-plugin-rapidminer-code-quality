@@ -18,14 +18,19 @@ package com.rapidminer.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
-import org.gradle.api.plugins.quality.PmdPlugin
+import org.gradle.api.plugins.GroovyPlugin
+import org.gradle.api.plugins.JavaPlugin
+import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles
 import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
+import com.rapidminer.gradle.eclipse.findbugs.FindbugsEclipse
+
 
 
 /**
+ * The Code Quality plugin class which contains all logic for applying code quality plugins.
  *
  * @author Nils Woehler
  *
@@ -36,6 +41,11 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private static final String ALL_JAVA = '**/*.java'
 	private static final String ALL_GROOVY = '**/*.groovy'
 
+	private static final String HEADER_CHECK = 'headerCheck'
+	private static final String JDEPEND = 'jdepend'
+	private static final String JACOCO = 'jacoco'
+	private static final String PMD = 'pmd'
+
 	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String INIT_CHECKSTYLE_CONFIG_TASK = 'checkstyleInitDefaultConfig'
 	private static final String CHECKSTYLE_GEN_REPORT = 'HTMLReport'
@@ -43,11 +53,8 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private static final String CODENARC = 'codenarc'
 	private static final String INIT_CODENARC_CONFIG_TASK = 'codenarcInitDefaultConfig'
 
-	private static final String HEADER_CHECK = 'headerCheck'
-	private static final String JDEPEND = 'jdepend'
 	private static final String FINDBUGS = 'findbugs'
-	private static final String JACOCO = 'jacoco'
-	private static final String PMD = 'pmd'
+	private static final String ECLIPSE_FINDBUGS_CONFIG_TASK = 'eclipseFindBugs'
 
 	@Override
 	void apply(Project project) {
@@ -56,9 +63,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		CodeQualityConfiguration qualityExt = project.extensions.create("codeQuality", CodeQualityConfiguration)
 
 		// Adds JaCoCo check tasks
-		// Cannot be done in afterEvaluate as this breaks the plugin tasks
-		if(applyPlugin(project, JACOCO, qualityExt.jacoco) && 
-			(project.plugins.withType(org.gradle.api.plugins.GroovyPlugin) || project.plugins.withType(org.gradle.api.plugins.JavaPlugin))){
+		// Cannot be done in afterEvaluate as this breaks the JaCoCo plugin tasks
+		if(applyPlugin(project, JACOCO, qualityExt.jacoco) &&
+		(project.plugins.withType(org.gradle.api.plugins.GroovyPlugin) || project.plugins.withType(org.gradle.api.plugins.JavaPlugin))){
 			configureJaCoCo(project, qualityExt)
 		}
 
@@ -70,7 +77,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				configureHeaderCheck(project, qualityExt, configurationDir)
 			}
 
-			if(project.plugins.withType(org.gradle.api.plugins.GroovyPlugin)) {
+			if(project.plugins.withType(GroovyPlugin)) {
 				project.logger.info("${project.name} is a Groovy project. Only checking for Groovy code quality plugins.")
 
 				if(applyPlugin(project, CODENARC, qualityExt.codenarc)) {
@@ -78,7 +85,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					configureCodeNarc(project, qualityExt, configurationDir)
 				}
 
-			} else if(project.plugins.withType(org.gradle.api.plugins.JavaPlugin)) {
+			} else if(project.plugins.withType(JavaPlugin)) {
 				project.logger.info("${project.name} is a Java project. Only checking for Java code quality plugins.")
 
 				if(applyPlugin(project, CHECKSTYLE,  qualityExt.checkstyle)) {
@@ -126,12 +133,12 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private void configurePMD(Project project, CodeQualityConfiguration codeExt) {
 		project.configure(project){
 			apply plugin: 'pmd'
-		
+
 			pmd {
 				ignoreFailures = { codeExt.pmdIgnoreErrors }
 				sourceSets = [sourceSets.main]
 			}
-			
+
 		}
 	}
 
@@ -158,8 +165,36 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				ignoreFailures = { codeExt.findbugsIgnoreErrors }
 				reportsDir = file("${project.buildDir}/reports/findbugs")
 
+				if(file(codeExt.findbugsExcludeFilter).exists()){
+					excludeFilter = file(codeExt.findbugsExcludeFilter)
+				}
+
 				effort = 'max'
 				reportLevel = 'high'
+			}
+
+
+			// check if provided configuration exists
+			if(project.configurations.find { it.name == 'provided' }) {
+				dependencies { provided 'com.google.code.findbugs:annotations:3.0.0' }
+			} else {
+				project.logger.info('Configuration \'provided\' does not exist. Skip adding of FindBugs annotation library dependency.')
+			}
+
+			// Create task which allows to configure FindBugs Eclipse plugin
+			Task initFindbugsEclipseTask = tasks.create(name: ECLIPSE_FINDBUGS_CONFIG_TASK, type: FindbugsEclipse)
+			initFindbugsEclipseTask.group = TASK_GROUP
+			initFindbugsEclipseTask.description = "Creates FindBugs Eclipse config files for the current project."
+
+			// Ensure findbugs config files are copied if project applies Eclipse plugin
+			project.plugins.withType(EclipsePlugin) {
+				project.tasks.eclipse.dependsOn initFindbugsEclipseTask
+
+				// Also configure FindBugs nature and buildCommand
+				eclipse.project {
+					natures 'edu.umd.cs.findbugs.plugin.eclipse.findbugsNature'
+					buildCommand 'edu.umd.cs.findbugs.plugin.eclipse.findbugsBuilder'
+				}
 			}
 		}
 	}
@@ -187,9 +222,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			apply plugin: CODENARC
 
 			// ensure codenarc config file is in place
-			tasks.create(name: INIT_CODENARC_CONFIG_TASK, type: InitCodenarcConfigFiles)
-			codenarcInitDefaultConfig.group = TASK_GROUP
-			codenarcInitDefaultConfig.description = "Copies the default codenarc.conf files to " +
+			Task initTask = tasks.create(name: INIT_CODENARC_CONFIG_TASK, type: InitCodenarcConfigFiles)
+			initTask.group = TASK_GROUP
+			initTask.description = "Copies the default codenarc.conf files to " +
 					"the configured configuration directory."
 
 			def codenarcConfigDir = new File(configurationDir.absolutePath, CODENARC)
@@ -254,16 +289,16 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			}
 
 			// ensure checkstyle config files are in place
-			tasks.create(name: INIT_CHECKSTYLE_CONFIG_TASK, type: InitCheckstyleConfigFiles)
-			checkstyleInitDefaultConfig.group = TASK_GROUP
-			checkstyleInitDefaultConfig.description = "Copies the default checkstyle.xml files to " +
+			Task generateCheckstyleConfigTask = tasks.create(name: INIT_CHECKSTYLE_CONFIG_TASK, type: InitCheckstyleConfigFiles)
+			generateCheckstyleConfigTask.group = TASK_GROUP
+			generateCheckstyleConfigTask.description = "Copies the default checkstyle.xml files to " +
 					"the configured configuration directory."
 
 			// Configure checkstyle tasks
 			if(ext.checkstyleUseDefaultConfig) {
 				project.tasks.each { t ->
 					if(t.name != INIT_CHECKSTYLE_CONFIG_TASK && t.name.startsWith(CHECKSTYLE)) {
-						t.dependsOn checkstyleInitDefaultConfig
+						t.dependsOn generateCheckstyleConfigTask
 					}
 				}
 				checkstyleInitDefaultConfig {

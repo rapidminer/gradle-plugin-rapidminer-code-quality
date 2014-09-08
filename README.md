@@ -1,6 +1,8 @@
 ## Introduction
-The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks. 
+The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks at RapidMiner. 
 The plugin ships with preconfigured configuration files which are used by default.
+The plugin depends on other plugins (e.g. the Eclipse plugin, the Java plugin, etc.) to be configured correctly.
+Therefore it should be applied after only after all other plugins have been applied.
 
 ## How to use
 	buildscript { 
@@ -127,7 +129,14 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		/**
 		 * Defines whether FindBugs errors should be ignored. Default is: true
 		 */
-		findbugsIgnoreErrors = true
+		findbugsIgnoreErrors = false
+		
+		/**
+		 * The path to the file containing FindBugs excludes. If the specified file is present
+		 * it will be used. Otherwise the exclude filter will be ignored.
+		 *
+		 */
+		findbugsExcludeFilter = 'config/findbugs/exclude.xml'
 		
 		// ############### JaCoCo #################
 	
@@ -170,6 +179,9 @@ The plugin ships with preconfigured configuration files which are used by defaul
 - license (https://github.com/hierynomus/license-gradle-plugin)
 
 ## Added Tasks
+##### eclipseFindBugs
+The task will be added if FindBugs is activated and the Eclipse plugin is applied. It configures the FindBugs Eclipse plugin by copying files to the .settings/ project folder.
+
 ##### checkstyleInitDefaultConfig
 Copies the default checkstyle config file to the directory specified by configDir. Will be executed before check tasks if checkstyleUseDefaultConfig is set to true.
 

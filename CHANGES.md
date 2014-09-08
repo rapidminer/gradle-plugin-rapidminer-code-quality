@@ -1,8 +1,10 @@
 ## Change Log
 
-#### 0.2.4
+#### 0.3.0
 * Jacoco is now disabled by default
-* findbugs and PMD are now enabled by default
+* Improved rule sets used by checkstyle
+* FindBugs and PMD are now enabled by default
+* FindBugs error will now fail the build by default
 
 #### 0.2.3
 * Updated license plugin to vesion 0.11.0

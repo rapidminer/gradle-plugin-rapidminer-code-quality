@@ -16,6 +16,7 @@
 package com.rapidminer.gradle;
 
 /**
+ * Configuration container for Code Quality plugin.
  *
  * @author Nils Woehler
  *
@@ -28,44 +29,44 @@ public class CodeQualityConfiguration {
 	String configDir = "config/"
 
 	// ############### Java Header ##################
-	
+
 	/**
 	 * Defines whether the header check tasks should be added.
 	 */
 	boolean headerCheck = true
 
 	/**
-	 * The path to the file that contains the license header. 
-	 * The path should be relative to the root folder of the root project. 
-	 * It will be used to check the file header if {@link #addHeaderChecks} is 
+	 * The path to the file that contains the license header.
+	 * The path should be relative to the root folder of the root project.
+	 * It will be used to check the file header if {@link #addHeaderChecks} is
 	 * set to <code>true</code>.
 	 */
 	String headerFile = "config/HEADER"
-	
+
 	/**
 	 * Defines whether to ignore header errors
 	 */
 	boolean headerCheckIgnoreErrors = false
-	
+
 	/**
 	 * If set to <code>true</code>, the headerFile parameter will point
 	 * to the local project instead to the root project config file.
-	 * This can be used to have different licenses in subprojects of 
+	 * This can be used to have different licenses in subprojects of
 	 * a multi project build environment.
 	 */
 	boolean headerCheckUseRootConfig = true
 
 	// ############### Codenarc ##################
-	
+
 	/**
 	 * Defines whether the CodeNarc plugin should be applied. Default: true.
-	 * Can be overwritten by defining the project property 
+	 * Can be overwritten by defining the project property
 	 * 'codenarc' (e.g. 'gradle check -P codenarc=false').
 	 *
 	 * CodeNarc will only be  applied for project that also apply the Groovy plugin.
 	 */
 	boolean codenarc = true
-	
+
 	/**
 	 * Defines whether to use the shipped Codenarc config file.
 	 */
@@ -83,14 +84,14 @@ public class CodeQualityConfiguration {
 	boolean codenarcIgnoreErrors = true
 
 	// ############### Checkstyle ##################
-	
+
 	/**
 	 * Defines if the checkstyle plugin should be applied.
-	 * Can be overwritten by defining the project property 
+	 * Can be overwritten by defining the project property
 	 * 'checkstyle' (e.g. 'gradle check -P checkstyle=false').
 	 */
 	boolean checkstyle = true
-	
+
 	/**
 	 * Defines whether to use the shipped checkstyle config file.
 	 */
@@ -107,54 +108,61 @@ public class CodeQualityConfiguration {
 	 * Default is: <code>true</code>
 	 */
 	boolean checkstyleIgnoreErrors = true
-	
+
 	// ############### JDepend ##################
 
 	/**
 	 * Defines if the JDepend plugin should be applied. Default is: <code>false</code>.
-	 * Can be overwritten by defining the project property 
+	 * Can be overwritten by defining the project property
 	 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 	 */
 	boolean jdepend = false
-	
+
 	/**
 	 * Defines whether JDepend errors should be ignored. Default is: <code>true</code>
 	 */
 	boolean jdependIgnoreErrors = true
 
-	
+
 	// ############### FindBugs ##################
-	
+
 	/**
 	 * Defines if the FindBugs plugin should be applied. Default is: <code>true</code>.
-	 * Can be overwritten by defining the project property 
+	 * Can be overwritten by defining the project property
 	 * 'findbugs' (e.g. 'gradle check -P findbugs=false').
 	 */
 	boolean findbugs = true
-	
+
 	/**
-	 * Defines whether FindBugs errors should be ignored. Default is: <code>true</code>
+	 * Defines whether FindBugs errors should be ignored. Default is: <code>false</code>
 	 */
-	boolean findbugsIgnoreErrors = true
-	
+	boolean findbugsIgnoreErrors = false
+
+	/**
+	 * The path to the file containing FindBugs excludes. If the specified file is present
+	 * it will be used. Otherwise the exclude filter will be ignored.
+	 *
+	 */
+	String findbugsExcludeFilter = 'config/findbugs/exclude.xml'
+
 	// ############### JaCoCo #################
-	
+
 	/**
 	 * Defines if the JaCoCo plugin should be applied. Default is: false.
-	 * Can be overwritten by defining the project property 
+	 * Can be overwritten by defining the project property
 	 * 'jacoco' (e.g. 'gradle check -Pjacoco=true').
 	 */
 	boolean jacoco = false
-	
-	
-	// ############### PMD ################# 
+
+
+	// ############### PMD #################
 	/**
 	 * Defines if the PMD plugin should be applied. Default is: true.
 	 * Can be overwritten by defining the project property
 	 * 'pmd' (e.g. 'gradle check -P pmd=false').
 	 */
 	boolean pmd = true
-	
+
 	/**
 	 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
 	 */
