@@ -152,6 +152,8 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			initPMDEclipseTask.group = TASK_GROUP
 			initPMDEclipseTask.description = "Creates PMD Eclipse plugin config files for the current project."
 
+			project.tasks.findAll { return it.name.startsWith('pmd') }.each { it.dependsOn initPMDEclipseTask }
+
 			initPMDEclipseTask.configure { rulesetFile = ruleSet }
 
 			// Ensure findbugs config files are copied if project applies Eclipse plugin
