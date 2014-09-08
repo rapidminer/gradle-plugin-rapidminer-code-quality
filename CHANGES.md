@@ -6,7 +6,6 @@
 * Checkstyle errors will now fail the build by default
 * FindBugs is now enabled by default
 * FindBugs errors will now fail the build by default
-* PMD is now enabled by default
 
 #### 0.2.3
 * Updated license plugin to vesion 0.11.0

@@ -36,7 +36,6 @@ class CheckstyleEclipse extends DefaultTask {
 	@TaskAction
 	private void copyCheckstyleConfigFiles() {
 
-		//		/rapidminer-license/config/checkstyle/checkstyle.xml
 		String checkstyleConfigText = ''
 
 		// load checkstyle config template

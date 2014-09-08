@@ -27,6 +27,7 @@ import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles
 import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
 import com.rapidminer.gradle.eclipse.checkstyle.CheckstyleEclipse
 import com.rapidminer.gradle.eclipse.findbugs.FindbugsEclipse
+import com.rapidminer.gradle.eclipse.pmd.PMDEclipse
 
 
 
@@ -45,7 +46,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 	private static final String HEADER_CHECK = 'headerCheck'
 	private static final String JDEPEND = 'jdepend'
 	private static final String JACOCO = 'jacoco'
+
 	private static final String PMD = 'pmd'
+	private static final String ECLIPSE_PMD_CONFIG_TASK = 'eclipsePMD'
 
 	private static final String CHECKSTYLE = 'checkstyle'
 	private static final String ECLIPSE_CHECKSTYLE_CONFIG_TASK = 'eclipseCheckstyle'
@@ -136,9 +139,30 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		project.configure(project){
 			apply plugin: 'pmd'
 
+			File ruleSet = project.rootProject.file(codeExt.configDir + '/pmd/ruleset')
+
 			pmd {
 				ignoreFailures = { codeExt.pmdIgnoreErrors }
 				sourceSets = [sourceSets.main]
+				ruleSetFiles = files(ruleSet)
+			}
+
+			// Create task which allows to configure FindBugs Eclipse plugin
+			Task initPMDEclipseTask = tasks.create(name: ECLIPSE_PMD_CONFIG_TASK, type: PMDEclipse)
+			initPMDEclipseTask.group = TASK_GROUP
+			initPMDEclipseTask.description = "Creates PMD Eclipse plugin config files for the current project."
+
+			initPMDEclipseTask.configure { rulesetFile = ruleSet }
+
+			// Ensure findbugs config files are copied if project applies Eclipse plugin
+			project.plugins.withType(EclipsePlugin) {
+				project.tasks.eclipse.dependsOn initPMDEclipseTask
+
+				// Also configure PMD nature and buildCommand
+				eclipse.project {
+					natures 'net.sourceforge.pmd.eclipse.plugin.pmdNature'
+					buildCommand 'net.sourceforge.pmd.eclipse.plugin.pmdBuilder'
+				}
 			}
 
 		}
