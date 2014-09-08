@@ -102,8 +102,14 @@
 
 		<!-- to enable SuppressionCommentFilter -->
 		<module name="FileContentsHolder" />
+		
+		<!-- to enable SuppressWarningsFilter -->
+		<module name="SuppressWarningsHolder" />
 	</module>
 
 	<!-- allows suppressing using the //CHECKSTYLE:ON //CHECKSTYLE:OFF -->
 	<module name="SuppressionCommentFilter" />
+	
+	<!-- Allows suppressing using @SuppressWarnings annotation -->
+	<module name="SuppressWarningsFilter" />
 </module>
