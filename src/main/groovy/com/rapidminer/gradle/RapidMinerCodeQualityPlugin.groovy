@@ -139,15 +139,18 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		project.configure(project){
 			apply plugin: 'pmd'
 
-			File ruleSet = project.rootProject.file(codeExt.configDir + '/pmd/ruleset')
+			File ruleSet = project.rootProject.file(codeExt.configDir + '/pmd/ruleset.xml')
 
 			pmd {
 				ignoreFailures = { codeExt.pmdIgnoreErrors }
 				sourceSets = [sourceSets.main]
 				ruleSetFiles = files(ruleSet)
+				
+				// disable predfined basic ruleset
+				ruleSets = []
 			}
 
-			// Create task which allows to configure FindBugs Eclipse plugin
+			// Create task which allows to configure PMD Eclipse plugin
 			Task initPMDEclipseTask = tasks.create(name: ECLIPSE_PMD_CONFIG_TASK, type: PMDEclipse)
 			initPMDEclipseTask.group = TASK_GROUP
 			initPMDEclipseTask.description = "Creates PMD Eclipse plugin config files for the current project."
@@ -198,7 +201,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				}
 
 				effort = 'max'
-				reportLevel = 'high'
+				reportLevel = 'medium'
 			}
 
 

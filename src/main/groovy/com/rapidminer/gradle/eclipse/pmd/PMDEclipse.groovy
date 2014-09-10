@@ -28,7 +28,7 @@ class PMDEclipse extends DefaultTask {
 
 	private static final String LOCATION = '_LOCATION_'
 	private static final String PMD = 'pmd'
-	public static final String RULESET_FILENAME = 'ruleset'
+	public static final String RULESET_FILENAME = 'ruleset.xml'
 
 	File rulesetFile
 
