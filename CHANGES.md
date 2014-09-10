@@ -1,5 +1,9 @@
 ## Change Log
 
+#### 0.3.1 
+* Disables PMD Eclipse plugin on full builds
+* Disables FindBugs Eclipse plugin on full builds
+
 #### 0.3.0
 * Jacoco is now disabled by default (introduced too many build failures)
 * Improved rule sets used by checkstyle
