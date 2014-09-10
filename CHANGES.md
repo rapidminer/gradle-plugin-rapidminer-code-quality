@@ -1,5 +1,12 @@
 ## Change Log
 
+#### 0.3.0
+* Jacoco is now disabled by default (introduced too many build failures)
+* Improved rule sets used by checkstyle
+* Checkstyle errors will now fail the build by default
+* FindBugs is now enabled by default
+* FindBugs errors will now fail the build by default
+
 #### 0.2.3
 * Updated license plugin to vesion 0.11.0
 * Added Gradle 2.1 compatible plugin name 'com.rapidminer.gradle.code-quality' 
