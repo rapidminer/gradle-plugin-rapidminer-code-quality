@@ -8,25 +8,8 @@
 		<!-- See http://checkstyle.sourceforge.net/config_annotation.html -->
 		<module name="MissingDeprecated" />
 
-		<!-- Checks for Blocks -->
-		<!-- See http://checkstyle.sourceforge.net/config_blocks.html -->
-		<module name="EmptyBlock">
-			<property name="option" value="stmt" />
-			<property name="tokens"
-				value="LITERAL_DO,LITERAL_ELSE,LITERAL_FINALLY,LITERAL_IF,LITERAL_FOR,LITERAL_TRY,LITERAL_WHILE,INSTANCE_INIT,STATIC_INIT" />
-		</module>
-		<module name="EmptyBlock">
-			<property name="option" value="text" />
-			<property name="tokens" value="LITERAL_CATCH" />
-		</module>
-		<module name="AvoidNestedBlocks" />
-		<module name="LeftCurly" />
-		<module name="RightCurly" />
-		<module name="NeedBraces" />
-
 		<!-- Checks for class design -->
 		<!-- See http://checkstyle.sf.net/config_design.html -->
-		<module name="DesignForExtension" />
 		<module name="FinalClass" />
 		<module name="HideUtilityClassConstructor" />
 		<module name="InterfaceIsType" />
@@ -38,19 +21,13 @@
 		<module name="DefaultComesLast" />
 		<module name="EmptyStatement" />
 		<module name="EqualsHashCode" />
-		<module name="ExplicitInitialization" />
-		<module name="HiddenField" />
 		<module name="IllegalInstantiation" />
 		<module name="IllegalThrows" />
 		<module name="InnerAssignment" />
-		<module name="MagicNumber" />
 		<module name="ModifiedControlVariable" />
 		<module name="MissingSwitchDefault" />
 		<module name="MultipleVariableDeclarations" />
-		<module name="MultipleStringLiterals" />
-		<module name="NoClone" />
 		<module name="NoFinalizer" />
-		<module name="RedundantThrows" />
 		<module name="SimplifyBooleanExpression" />
 		<module name="SimplifyBooleanReturn" />
 		<module name="StringLiteralEquality" />
@@ -61,35 +38,24 @@
 		<module name="AvoidStarImport" />
 		<module name="IllegalImport" /> <!-- defaults to sun.* packages -->
 		<module name="RedundantImport" />
-		<module name="UnusedImports" />
 
 		<!-- Checks for Javadoc comments. -->
 		<!-- See http://checkstyle.sf.net/config_javadoc.html -->
 		<module name="JavadocType">
 			<property name="authorFormat" value="\S" /> <!-- Check for @Author tag -->
+			<property name="scope" value="public" />
 		</module>
 		<module name="JavadocMethod">
 			<property name="allowMissingPropertyJavadoc" value="true" />
-		</module>
-		<module name="JavadocVariable">
 			<property name="scope" value="public" />
 		</module>
-		<module name="JavadocStyle">
+		<module name="JavadocVariable">
 			<property name="scope" value="public" />
 		</module>
 
 		<!-- Checks for Size Violations. -->
 		<!-- See http://checkstyle.sf.net/config_sizes.html -->
-		<module name="LineLength">
-			<property name="max" value="126" />
-		</module>
 		<module name="MethodLength" />
-		<module name="ParameterNumber" />
-
-		<!-- Modifier Checks -->
-		<!-- See http://checkstyle.sf.net/config_modifiers.html -->
-		<module name="ModifierOrder" />
-		<module name="RedundantModifier" />
 
 		<!-- Checks whitespaces -->
 		<!-- See http://checkstyle.sourceforge.net/config_whitespace.html -->
@@ -98,7 +64,6 @@
 		<module name="EmptyForIteratorPad" />
 		<module name="MethodParamPad" />
 		<module name="OperatorWrap" />
-		<module name="ParenPad" />
 		<module name="TypecastParenPad" />
 		<module name="WhitespaceAfter">
 			<property name="tokens" value="COMMA, SEMI" />
@@ -127,14 +92,19 @@
 		<!-- Miscellaneous other checks. -->
 		<!-- See http://checkstyle.sf.net/config_misc.html -->
 		<module name="ArrayTypeStyle" />
-		<module name="FinalParameters" />
 		<module name="TodoComment" />
 		<module name="UpperEll" />
 
 		<!-- to enable SuppressionCommentFilter -->
 		<module name="FileContentsHolder" />
+		
+		<!-- to enable SuppressWarningsFilter -->
+		<module name="SuppressWarningsHolder" />
 	</module>
 
 	<!-- allows suppressing using the //CHECKSTYLE:ON //CHECKSTYLE:OFF -->
 	<module name="SuppressionCommentFilter" />
+	
+	<!-- Allows suppressing using @SuppressWarnings annotation -->
+	<module name="SuppressWarningsFilter" />
 </module>

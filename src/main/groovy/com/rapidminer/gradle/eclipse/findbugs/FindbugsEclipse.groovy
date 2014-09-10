@@ -13,28 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rapidminer.gradle.codenarc
+package com.rapidminer.gradle.eclipse.findbugs
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
-class InitCodenarcConfigFiles extends DefaultTask {
+/**
+ * Copies FindBugs Eclipse Plugin config files to the project's .settings directory.
+ *
+ * @author Nils Woehler
+ *
+ */
+class FindbugsEclipse extends DefaultTask {
 
-	private static final CODENARC_CONF = 'codenarc.conf'
+	private static final String SETTINGS_FOLDER = '.settings/'
 
-	File configDir
-	String codenarcFileName
+	private static final String CORE_PREFS = 'edu.umd.cs.findbugs.core.prefs'
+	private static final String PLUGIN_PREFS = 'edu.umd.cs.findbugs.plugin.eclipse.prefs'
 
 	@TaskAction
 	private void copyCheckstyleConfigFiles() {
-		// check if configDir folder exists, otherwise create it
-		if(!configDir.exists()) {
-			configDir.mkdirs()
-		}
 
-		File codenarcFile = new File(configDir.absolutePath, codenarcFileName)
+		// write core prefs
+		getClass().getResource(CORE_PREFS).withInputStream { ris -> project.file(SETTINGS_FOLDER + CORE_PREFS).write ris.text }
 
-		// write codenarc.conf
-		getClass().getResource(CODENARC_CONF).withInputStream { ris -> codenarcFile.write ris.text }
+		// write plugin prefs
+		getClass().getResource(PLUGIN_PREFS).withInputStream { ris -> project.file(SETTINGS_FOLDER + PLUGIN_PREFS).write ris.text }
 	}
 }

@@ -1,6 +1,9 @@
 ## Introduction
-The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks. 
-The plugin ships with preconfigured configuration files which are used by default.
+The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks at RapidMiner. 
+It is meant to be work out-of-the-box without any further configuration (at least in most of the cases).
+
+The plugin depends on other plugins (e.g. the Eclipse plugin, the Java plugin, etc.) to be configured correctly.
+Therefore it should be applied after only after all other plugins have been applied.
 
 ## How to use
 	buildscript { 
@@ -9,7 +12,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		} 
 	}
 	 
-	apply plugin: 'rapidminer-code-quality'
+	apply plugin: 'com.rapidminer.gradle.code-quality'
 	 
 	codeQuality {
 	 
@@ -18,7 +21,7 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		 */
 		configDir = "config/"
 
-		// ############### Java & Groovy Header ##################
+		// ############### License Header ##################
 		
 		/**
 		 * Defines whether the header check tasks should be added.
@@ -103,11 +106,11 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		// ############### JDepend ##################
 
 		/**
-		 * Defines if the JDepend plugin should be applied. Default is: true.
+		 * Defines if the JDepend plugin should be applied. Default is: false.
 		 * Can be overwritten by defining the project property 
 		 * 'jdepend' (e.g. 'gradle check -P jdepend=true').
 		 */
-		jdepend = true
+		jdepend = false
 		
 		/**
 		 * Defines whether JDepend errors should be ignored. Default is: true
@@ -120,27 +123,72 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		/**
 		 * Defines if the FindBugs plugin should be applied. Default is: true.
 		 * Can be overwritten by defining the project property 
-		 * 'findbugs' (e.g. 'gradle check -P findbugs=true').
+		 * 'findbugs' (e.g. 'gradle check -P findbugs=false').
 		 */
 		findbugs = true
 		
 		/**
 		 * Defines whether FindBugs errors should be ignored. Default is: true
 		 */
-		findbugsIgnoreErrors = true
+		findbugsIgnoreErrors = false
+		
+		/**
+		 * The path to the file containing FindBugs excludes. If the specified file is present
+		 * it will be used. Otherwise the exclude filter will be ignored.
+		 *
+		 */
+		findbugsExcludeFilter = 'config/findbugs/exclude.xml'
+		
+		// ############### JaCoCo #################
+	
+		/**
+		 * Defines if the JaCoCo plugin should be applied. Default is: false.
+		 * Can be overwritten by defining the project property 
+		 * 'jacoco' (e.g. 'gradle check -P jacoco=true').
+		 */
+		boolean jacoco = false
+	
+	
+		// ############### PMD ################# 
+		/**
+		 * Defines if the PMD plugin should be applied. Default is: true.
+		 * Can be overwritten by defining the project property
+		 * 'pmd' (e.g. 'gradle check -P pmd=false').
+		 */
+		boolean pmd = true
+		
+		/**
+		 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
+		 */
+		boolean pmdIgnoreErrors = true
 	}
 	
 ## Applied Plugins
-TODO split description for Java and for Groovy project
-- checkstyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
-- codenarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
-- findbugs (http://www.gradle.org/docs/current/userguide/findbugs_plugin.html)
-- jdepend (http://www.gradle.org/docs/current/userguide/jdepend_plugin.html)
+
+### Java projects:
+- CheckStyle (http://www.gradle.org/docs/current/userguide/checkstyle_plugin.html)
+- FindBugs (http://www.gradle.org/docs/current/userguide/findbugs_plugin.html)
+- JDepend (http://www.gradle.org/docs/current/userguide/jdepend_plugin.html)
+- PMD (http://www.gradle.org/docs/current/userguide/pmd_plugin.html)
+- JaCoCo (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
+
+### Groovy projects:
+- CodeNarc (http://www.gradle.org/docs/current/userguide/codenarc_plugin.html, only for Groovy projects)
+- JaCoCo (http://www.gradle.org/docs/current/userguide/jacoco_plugin.html)
+
+### All projects:
 - license (https://github.com/hierynomus/license-gradle-plugin)
 
 ## Added Tasks
+##### eclipseFindBugs
+The task will be added if FindBugs is activated and the Eclipse plugin is applied. It configures the FindBugs Eclipse plugin by copying files to the .settings/ project folder.
+
 ##### checkstyleInitDefaultConfig
 Copies the default checkstyle config file to the directory specified by configDir. Will be executed before check tasks if checkstyleUseDefaultConfig is set to true.
 
 ##### codenarcInitDefaultConfig
 Copies the default CodeNarc config file to the directory specified by configDir. Will be executed before check tasks if codenarcUseDefaultConfig is set to true.
+
+## Eclipse Plugins
+- FindBugs (http://findbugs.sourceforge.net/manual/eclipse.html)
+- CheckStyle (http://eclipse-cs.sourceforge.net/)
