@@ -4,5 +4,5 @@
     <ruleSetFile>_LOCATION_</ruleSetFile>
     <includeDerivedFiles>false</includeDerivedFiles>
     <violationsAsErrors>true</violationsAsErrors>
-    <fullBuildEnabled>true</fullBuildEnabled>
+    <fullBuildEnabled>false</fullBuildEnabled>
 </pmd>
