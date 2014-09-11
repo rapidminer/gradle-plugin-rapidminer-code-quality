@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.3.2
+* Also add findbugs annotation library as providedCompile dependency if provided configuration does not exist
+
 #### 0.3.1 
 * Disables PMD Eclipse plugin on full builds
 * Disables FindBugs Eclipse plugin on full builds

@@ -205,9 +205,11 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			}
 
 
-			// check if provided configuration exists
+			// check if provided or providedCompile configuration exists
 			if(project.configurations.find { it.name == 'provided' }) {
 				dependencies { provided 'com.google.code.findbugs:annotations:3.0.0' }
+			} else if(project.configurations.find { it.name == 'providedCompile' }) {
+				dependencies { providedCompile 'com.google.code.findbugs:annotations:3.0.0' }
 			} else {
 				project.logger.info('Configuration \'provided\' does not exist. Skip adding of FindBugs annotation library dependency.')
 			}
