@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.3.4
+* Downgrade accidentally set PMD version from 5.2 back to version 5.1.3
+
 #### 0.3.3
 * Sets checkstyle tool version to 5.9 to enable Java 8 code checking
 * Sets FindBugs tool version to 3.0.0 to enable Java 8 code checking

@@ -150,7 +150,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				ruleSets = []
 				
 				// adds Java 8 support
-				toolVersion = '5.2.0'
+				toolVersion = '5.1.3'
 			}
 
 			// Create task which allows to configure PMD Eclipse plugin
