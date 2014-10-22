@@ -1,5 +1,11 @@
 ## Change Log
 
+#### 0.3.3
+* Sets checkstyle tool version to 5.9 to enable Java 8 code checking
+* Sets FindBugs tool version to 3.0.0 to enable Java 8 code checking
+* Sets PMD tool version to 5.1.3 to enable Java 8 code checking
+* PMD errors will now fail the build by default
+
 #### 0.3.2
 * Also add findbugs annotation library as providedCompile dependency if provided configuration does not exist
 

@@ -148,6 +148,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				
 				// disable predfined basic ruleset
 				ruleSets = []
+				
+				// adds Java 8 support
+				toolVersion = '5.2.0'
 			}
 
 			// Create task which allows to configure PMD Eclipse plugin
@@ -199,6 +202,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				if(file(codeExt.findbugsExcludeFilter).exists()){
 					excludeFilter = file(codeExt.findbugsExcludeFilter)
 				}
+				
+				// adds Java 8 support
+				toolVersion = '3.0.0'
 
 				effort = 'max'
 				reportLevel = 'medium'
@@ -289,6 +295,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			File checkstyleConfigDir = new File(configurationDir.absolutePath, CHECKSTYLE)
 			File checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, ext.checkstyleConfigFileName)
 
+			// adds Java 8 support
+			checkstyle.toolVersion = '5.9'
+			
 			checkstyleMain {
 				ignoreFailures = ext.checkstyleIgnoreErrors
 				reports {

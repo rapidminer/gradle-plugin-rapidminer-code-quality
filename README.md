@@ -158,9 +158,9 @@ Therefore it should be applied after only after all other plugins have been appl
 		boolean pmd = true
 		
 		/**
-		 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
+		 * Defines whether PMD errors should be ignored. Default is: <code>false</code>
 		 */
-		boolean pmdIgnoreErrors = true
+		boolean pmdIgnoreErrors = false
 	}
 	
 ## Applied Plugins
