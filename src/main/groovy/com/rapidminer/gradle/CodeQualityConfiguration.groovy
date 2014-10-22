@@ -164,7 +164,7 @@ public class CodeQualityConfiguration {
 	boolean pmd = true
 
 	/**
-	 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
+	 * Defines whether PMD errors should be ignored. Default is: <code>false</code>
 	 */
-	boolean pmdIgnoreErrors = true
+	boolean pmdIgnoreErrors = false
 }

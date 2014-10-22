@@ -148,9 +148,9 @@ The plugin ships with preconfigured configuration files which are used by defaul
 		boolean pmd = false
 		
 		/**
-		 * Defines whether PMD errors should be ignored. Default is: <code>true</code>
+		 * Defines whether PMD errors should be ignored. Default is: <code>false</code>
 		 */
-		boolean pmdIgnoreErrors = true
+		boolean pmdIgnoreErrors = false
 	}
 	
 ## Applied Plugins
