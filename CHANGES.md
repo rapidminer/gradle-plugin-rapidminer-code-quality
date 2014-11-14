@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.3.5
+* Adds shortened plugin name 'com.rapidminer.code-quality' to comply with plugins.gradle.org standards
+
 #### 0.3.4
 * Downgrade accidentally set PMD version from 5.2 back to version 5.1.3
 

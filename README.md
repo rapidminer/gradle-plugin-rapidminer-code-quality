@@ -1,18 +1,17 @@
 ## Introduction
-The 'rapidminer-code-quality' plugin is designed to add tasks for automatic code quality checks at RapidMiner. 
+The 'com.rapidminer.code-quality' plugin adds tasks for automatic code quality checks for Java/Groovy projects at RapidMiner. 
 It is meant to be work out-of-the-box without any further configuration (at least in most of the cases).
 
-The plugin depends on other plugins (e.g. the Eclipse plugin, the Java plugin, etc.) to be configured correctly.
-Therefore it should be applied after only after all other plugins have been applied.
+The plugin depends on other plugins (e.g. the Eclipse plugin, the Java plugin, etc.). Therefore it should only be applied 
+after after all other plugins have been applied.
 
-## How to use
-	buildscript { 
-		dependencies { 
-			classpath 'com.rapidminer.gradle:code-quality:$VERSION'
-		} 
+## How to use (requires Gradle 2.1+)
+	// Apply other plugins first before applying the code-quality plugin 
+	apply plugin: 'java'
+	
+	plugins {
+		id 'com.rapidminer.code-quality' version «plugin version»
 	}
-	 
-	apply plugin: 'com.rapidminer.gradle.code-quality'
 	 
 	codeQuality {
 	 
