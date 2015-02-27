@@ -1,5 +1,7 @@
 ## Change Log
 
+#### 0.3.7
+
 #### 0.3.6
 * Decreases Findbugs effort to "default" instead of "max"
 
