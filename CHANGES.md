@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.3.6
+* Decreases Findbugs effort to "default" instead of "max"
+
 #### 0.3.5
 * Adds shortened plugin name 'com.rapidminer.code-quality' to comply with plugins.gradle.org standards
 
