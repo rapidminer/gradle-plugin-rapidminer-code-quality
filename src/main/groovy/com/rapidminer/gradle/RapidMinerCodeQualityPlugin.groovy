@@ -206,7 +206,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				// adds Java 8 support
 				toolVersion = '3.0.0'
 
-				effort = 'max'
+				effort = 'default'
 				reportLevel = 'medium'
 			}
 
