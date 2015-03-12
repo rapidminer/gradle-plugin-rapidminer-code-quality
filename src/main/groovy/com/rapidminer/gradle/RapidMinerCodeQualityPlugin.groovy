@@ -30,7 +30,6 @@ import com.rapidminer.gradle.eclipse.findbugs.FindbugsEclipse
 import com.rapidminer.gradle.eclipse.pmd.PMDEclipse
 
 
-
 /**
  * The Code Quality plugin class which contains all logic for applying code quality plugins.
  *
@@ -251,6 +250,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				}
 				ignoreFailures codeExt.headerCheckIgnoreErrors
 				includes([ALL_JAVA, ALL_GROOVY])
+                encoding = 'UTF-8'
 			}
 		}
 	}

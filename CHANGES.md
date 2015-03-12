@@ -1,6 +1,7 @@
 ## Change Log
 
 #### 0.3.7
+* Specify UTF-8 encoding for license formatting
 
 #### 0.3.6
 * Decreases Findbugs effort to "default" instead of "max"
