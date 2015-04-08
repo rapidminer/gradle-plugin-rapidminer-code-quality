@@ -297,7 +297,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 			// adds Java 8 support
 			checkstyle.toolVersion = '5.9'
-			
+
 			checkstyleMain {
 				ignoreFailures = ext.checkstyleIgnoreErrors
 				reports {
@@ -305,6 +305,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					xml { destination "${project.buildDir}/reports/checkstyle/main.xml" }
 				}
 				configFile checkstyleConfigFile
+				classpath += configurations.compile
 			}
 
 			checkstyleTest {
@@ -314,6 +315,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					xml { destination "${project.buildDir}/reports/checkstyle/test.xml" }
 				}
 				configFile checkstyleConfigFile
+				classpath += configurations.compile
 			}
 
 			// Gather all checkstyle tasks
