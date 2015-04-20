@@ -5,12 +5,12 @@ It is meant to be work out-of-the-box without any further configuration (at leas
 The plugin depends on other plugins (e.g. the Eclipse plugin, the Java plugin, etc.). Therefore it should only be applied 
 after after all other plugins have been applied.
 
-## How to use (requires Gradle 2.1+)
+## How to use (requires Gradle 2.3+)
 	// Apply other plugins first before applying the code-quality plugin 
 	apply plugin: 'java'
 	
 	plugins {
-		id 'com.rapidminer.code-quality' version «plugin version»
+		id 'com.rapidminer.code-quality' version <plugin version>
 	}
 	 
 	codeQuality {
