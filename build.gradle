@@ -1,5 +1,5 @@
 plugins {
-	id 'com.rapidminer.gradle-plugin' version '0.3.2'
+	id 'com.rapidminer.gradle-plugin' version '0.3.3'
 }
 
 gradlePlugin { id 'code-quality' }
