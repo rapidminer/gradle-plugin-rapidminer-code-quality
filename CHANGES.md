@@ -4,6 +4,11 @@
 * Specify UTF-8 encoding for license formatting
 * Adds compile configuration to Checkstyle task classpath
 
+#### 0.3.8
+
+#### 0.3.7
+* Use UTF-8 encoding when updating license headers with licenseFormat task
+
 #### 0.3.6
 * Decreases Findbugs effort to "default" instead of "max"
 
