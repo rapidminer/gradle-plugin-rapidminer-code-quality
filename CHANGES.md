@@ -1,5 +1,8 @@
 ## Change Log
 
+#### 0.4.1
+*
+
 #### 0.4.0
 * Adds compile configuration to Checkstyle task classpath
 * Updates 'license-gradle-plugin' to version 0.12.1
