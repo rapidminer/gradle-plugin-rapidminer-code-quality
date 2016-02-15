@@ -157,11 +157,11 @@ public class CodeQualityConfiguration {
 
 	// ############### PMD #################
 	/**
-	 * Defines if the PMD plugin should be applied. Default is: true.
+	 * Defines if the PMD plugin should be applied. Default is: false.
 	 * Can be overwritten by defining the project property
-	 * 'pmd' (e.g. 'gradle check -P pmd=false').
+	 * 'pmd' (e.g. 'gradle check -P pmd=true').
 	 */
-	boolean pmd = true
+	boolean pmd = false
 
 	/**
 	 * Defines whether PMD errors should be ignored. Default is: <code>false</code>

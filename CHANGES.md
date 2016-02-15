@@ -1,10 +1,9 @@
 ## Change Log
 
-#### 0.3.7
-* Specify UTF-8 encoding for license formatting
+#### 0.4.0
 * Adds compile configuration to Checkstyle task classpath
-
-#### 0.3.8
+* Updates 'license-gradle-plugin' to version 0.12.1
+* Disables PMD as default code style check
 
 #### 0.3.7
 * Use UTF-8 encoding when updating license headers with licenseFormat task
