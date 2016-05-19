@@ -1,7 +1,14 @@
 ## Change Log
 
 #### 0.4.1
-*
+* Updates findbugs version to 3.0.1
+* Updates checkstyle version to 6.16.1
+* Updates PMD version to 5.4.1
+* Adapts default checkstyle configuration file rules to be more liberal including
+** do not check for TODO comments anymore
+** only check public methods for JavaDoc, not constructors
+** do not check for author tag anymore
+* Removes the test sourceSet from the checkstyle checks. Now only the main sourceSet will be checked.
 
 #### 0.4.0
 * Adds compile configuration to Checkstyle task classpath

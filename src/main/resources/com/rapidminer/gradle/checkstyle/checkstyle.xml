@@ -1,6 +1,6 @@
 <!DOCTYPE module PUBLIC
-        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+		"-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+		"http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
 	<module name="TreeWalker">
 
@@ -41,13 +41,10 @@
 
 		<!-- Checks for Javadoc comments. -->
 		<!-- See http://checkstyle.sf.net/config_javadoc.html -->
-		<module name="JavadocType">
-			<property name="authorFormat" value="\S" /> <!-- Check for @Author tag -->
-			<property name="scope" value="public" />
-		</module>
 		<module name="JavadocMethod">
 			<property name="allowMissingPropertyJavadoc" value="true" />
 			<property name="scope" value="public" />
+			<property name="tokens" value="METHOD_DEF" />
 		</module>
 		<module name="JavadocVariable">
 			<property name="scope" value="public" />
@@ -92,19 +89,18 @@
 		<!-- Miscellaneous other checks. -->
 		<!-- See http://checkstyle.sf.net/config_misc.html -->
 		<module name="ArrayTypeStyle" />
-		<module name="TodoComment" />
 		<module name="UpperEll" />
 
 		<!-- to enable SuppressionCommentFilter -->
 		<module name="FileContentsHolder" />
-		
+
 		<!-- to enable SuppressWarningsFilter -->
 		<module name="SuppressWarningsHolder" />
 	</module>
 
 	<!-- allows suppressing using the //CHECKSTYLE:ON //CHECKSTYLE:OFF -->
 	<module name="SuppressionCommentFilter" />
-	
+
 	<!-- Allows suppressing using @SuppressWarnings annotation -->
 	<module name="SuppressWarningsFilter" />
 </module>

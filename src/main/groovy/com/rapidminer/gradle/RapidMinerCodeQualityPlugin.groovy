@@ -15,20 +15,19 @@
  */
 package com.rapidminer.gradle
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.api.Task
-import org.gradle.api.plugins.GroovyPlugin
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.plugins.ide.eclipse.EclipsePlugin
-import org.gradle.testing.jacoco.plugins.JacocoPlugin
-
 import com.rapidminer.gradle.checkstyle.InitCheckstyleConfigFiles
 import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
 import com.rapidminer.gradle.eclipse.checkstyle.CheckstyleEclipse
 import com.rapidminer.gradle.eclipse.findbugs.FindbugsEclipse
 import com.rapidminer.gradle.eclipse.pmd.PMDEclipse
-
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.Task
+import org.gradle.api.plugins.GroovyPlugin
+import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.testing.Test
+import org.gradle.plugins.ide.eclipse.EclipsePlugin
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 /**
  * The Code Quality plugin class which contains all logic for applying code quality plugins.
@@ -132,6 +131,26 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 	private void configureJaCoCo(Project project, CodeQualityConfiguration codeExt) {
 		project.apply plugin: JacocoPlugin
+
+		jacoco {
+			toolVersion ='0.7.6.201602180812'
+		}
+
+		jacocoTestReport {
+			// Temporary work-around -- http://issues.gradle.org/browse/GRADLE-2764
+			additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+			reports {
+				html.enabled true
+				xml.enabled true
+			}
+		}
+
+		// Temporary work-around -- Fixes http://issues.gradle.org/browse/GRADLE-2859
+		// Allows to run jacoco with multi project builds
+		tasks.withType(Test) {
+			systemProperties['user.dir'] = workingDir
+		}
+
 	}
 
 	private void configurePMD(Project project, CodeQualityConfiguration codeExt) {
@@ -149,7 +168,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				ruleSets = []
 				
 				// adds Java 8 support
-				toolVersion = '5.1.3'
+				toolVersion = '5.4.1'
 			}
 
 			// Create task which allows to configure PMD Eclipse plugin
@@ -203,7 +222,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				}
 				
 				// adds Java 8 support
-				toolVersion = '3.0.0'
+				toolVersion = '3.0.1'
 
 				effort = 'default'
 				reportLevel = 'medium'
@@ -288,18 +307,23 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		}
 	}
 
-	private void configureCheckstyle(Project project, CodeQualityConfiguration ext, File configurationDir) {
+	private void configureCheckstyle(Project project, CodeQualityConfiguration codeQualityExt, File configurationDir) {
 		project.configure(project) {
 			apply plugin: CHECKSTYLE
 
 			File checkstyleConfigDir = new File(configurationDir.absolutePath, CHECKSTYLE)
-			File checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, ext.checkstyleConfigFileName)
+			File checkstyleConfigFile = new File(checkstyleConfigDir.absolutePath, codeQualityExt.checkstyleConfigFileName)
 
 			// adds Java 8 support
-			checkstyle.toolVersion = '5.9'
+			// Version 6.17 and 6.18 break the relative workspace path in Eclipse
+			checkstyle {
+				sourceSets = [ project.sourceSets.main ]
+				toolVersion = '6.16.1'
+				showViolations = false
+			}
 
 			checkstyleMain {
-				ignoreFailures = ext.checkstyleIgnoreErrors
+				ignoreFailures = codeQualityExt.checkstyleIgnoreErrors
 				reports {
 					include (ALL_JAVA)
 					xml { destination "${project.buildDir}/reports/checkstyle/main.xml" }
@@ -308,15 +332,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				classpath += configurations.compile
 			}
 
-			checkstyleTest {
-				ignoreFailures = ext.checkstyleIgnoreErrors
-				reports {
-					include (ALL_JAVA)
-					xml { destination "${project.buildDir}/reports/checkstyle/test.xml" }
-				}
-				configFile checkstyleConfigFile
-				classpath += configurations.compile
-			}
+			checkstyleTest.enabled = false
 
 			// Gather all checkstyle tasks
 			project.tasks.findAll { t ->
@@ -339,7 +355,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 					"the configured configuration directory."
 
 			// Configure checkstyle init config tasks
-			if(ext.checkstyleUseDefaultConfig) {
+			if(codeQualityExt.checkstyleUseDefaultConfig) {
 				project.tasks.each { t ->
 					if(t.name != INIT_CHECKSTYLE_CONFIG_TASK && t.name.startsWith(CHECKSTYLE)) {
 						t.dependsOn generateCheckstyleConfigTask
@@ -347,31 +363,34 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				}
 				checkstyleInitDefaultConfig {
 					configDir = checkstyleConfigDir
-					checkstyleFileName = ext.checkstyleConfigFileName
+					checkstyleFileName = codeQualityExt.checkstyleConfigFileName
 				}
 
-				// if default config should be used, also configure Eclipse plugin config file task
-				Task eclipseCheckstyle = tasks.create(name: ECLIPSE_CHECKSTYLE_CONFIG_TASK, type: CheckstyleEclipse)
-				eclipseCheckstyle.group = TASK_GROUP
-				eclipseCheckstyle.description = "Creates Checkstyle Eclipse plugin config files for the current project."
+			}
 
-				eclipseCheckstyle.configure {
-					configDir = ext.configDir
-					checkstyleFileName = ext.checkstyleConfigFileName
-				}
+			// Configure Eclipse plugin config file task
+			Task eclipseCheckstyle = tasks.create(name: ECLIPSE_CHECKSTYLE_CONFIG_TASK, type: CheckstyleEclipse)
+			eclipseCheckstyle.group = TASK_GROUP
+			eclipseCheckstyle.description = "Creates Checkstyle Eclipse plugin config files for the current project."
 
-				// Ensure findbugs config files are copied if project applies Eclipse plugin
-				project.plugins.withType(EclipsePlugin) {
-					project.tasks.eclipse.dependsOn eclipseCheckstyle
+			eclipseCheckstyle.configure {
+				configDir = codeQualityExt.configDir
+				checkstyleFileName = codeQualityExt.checkstyleConfigFileName
+			}
 
-					// ensure that checkstyle.xml is present
+			// Ensure findbugs config files are copied if project applies Eclipse plugin
+			project.plugins.withType(EclipsePlugin) {
+				project.tasks.eclipse.dependsOn eclipseCheckstyle
+
+				// ensure that checkstyle.xml is present if shipped one should be used
+				if(codeQualityExt.checkstyleUseDefaultConfig) {
 					eclipseCheckstyle.dependsOn generateCheckstyleConfigTask
+				}
 
-					// Also configure checkstyle nature and buildCommand
-					eclipse.project {
-						natures 'net.sf.eclipsecs.core.CheckstyleNature'
-						buildCommand 'net.sf.eclipsecs.core.CheckstyleBuilder'
-					}
+				// Also configure checkstyle nature and buildCommand
+				eclipse.project {
+					natures 'net.sf.eclipsecs.core.CheckstyleNature'
+					buildCommand 'net.sf.eclipsecs.core.CheckstyleBuilder'
 				}
 			}
 
