@@ -1,5 +1,7 @@
 ## Change Log
 
+#### 0.4.2
+
 #### 0.4.1
 * Updates findbugs version to 3.0.1
 * Updates checkstyle version to 6.16.1
