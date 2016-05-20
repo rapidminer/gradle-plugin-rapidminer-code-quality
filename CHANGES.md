@@ -1,6 +1,7 @@
 ## Change Log
 
 #### 0.4.2
+* Changes 'license-gradle-plugin' back to version 0.11.1 to fix broken license header checks
 
 #### 0.4.1
 * Updates findbugs version to 3.0.1
