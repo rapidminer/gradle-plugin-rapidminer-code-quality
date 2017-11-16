@@ -284,7 +284,6 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			Task checkLicenses = tasks.create(name: "checkThirdPartyLicenses", type: CheckThirdPartyLicenses)
 			checkLicenses.group = "license"
 			checkLicenses.excludedArtifacts = codeExt.excludedThirdPartyLicenses
-			checkLicenses.excludeArtifactsFromFolder = codeExt.excludeThirdPartyLicenseFolder
 			checkLicenses.dependsOn tasks.downloadLicenses
 
 			if(codeExt.checkThirdPartyLicensesBeforeTest) {

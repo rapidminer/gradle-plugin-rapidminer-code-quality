@@ -68,11 +68,6 @@ public class CodeQualityConfiguration {
 	 */
 	List excludedThirdPartyLicenses = []
 
-	/**
-	 * Path to folder which will be checked for ".license" files. The found license files will be ignored by name.
-	 */
-	List excludeThirdPartyLicenseFolder
-
 	// ############### Codenarc ##################
 
 	/**

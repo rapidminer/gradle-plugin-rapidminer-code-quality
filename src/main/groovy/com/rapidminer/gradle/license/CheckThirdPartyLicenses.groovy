@@ -27,11 +27,20 @@ class CheckThirdPartyLicenses extends DefaultTask {
 
     def loadLicenses() {
 
+        def artifactsToExclude = excludedArtifacts
+        project.logger.debug "License artifact folder defined? $excludeArtifactsFromFolder"
         if (excludeArtifactsFromFolder) {
-            excludeArtifactsFromFolder.eachFile() { file ->
-                excludedArtifacts << file.name - ".license"
+            def artifactsToExcludeFromFile = []
+            project.logger.debug "Loading artifacts to exclude from $excludeArtifactsFromFolder"
+            project.file(excludeArtifactsFromFolder).eachFile() { file ->
+                def toExclude = file.name - ".license"
+                project.logger.debug "Excluding $toExclude from third party license check"
+                artifactsToExcludeFromFile << toExclude
             }
+            artifactsToExclude += artifactsToExcludeFromFile
         }
+
+        project.logger.info "Excluding following items from third party license check: $artifactsToExclude"
 
         def dependenciesJSON = project.file("$project.buildDir/reports/license/dependency-license.json")
         if (dependenciesJSON.exists()) {
@@ -42,7 +51,7 @@ class CheckThirdPartyLicenses extends DefaultTask {
                 def nameParts = dependency.name.split(":")
                 // using the artifact name without group and version
                 def artifactName = nameParts[1]
-                def isIncludedArtifact = !(artifactName in excludedArtifacts)
+                def isIncludedArtifact = !(artifactName in artifactsToExclude)
                 if (isIncludedArtifact) {
                     def licenseNames = dependency.licenses.name
                     def licensesAsStr = licenseNames.join("; ")
