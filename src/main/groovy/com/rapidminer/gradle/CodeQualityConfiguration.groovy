@@ -56,6 +56,23 @@ public class CodeQualityConfiguration {
 	 */
 	boolean headerCheckUseRootConfig = true
 
+	// ############### Third party license check ##################
+
+	/**
+	 * Defines whether the third party license folder should be checked before test task runs
+	 */
+	boolean checkThirdPartyLicensesBeforeTest = false
+
+	/**
+	 * List of artifacts to ignore
+	 */
+	List excludedThirdPartyLicenses = []
+
+	/**
+	 * Path to folder which will be checked for ".license" files. The found license files will be ignored by name.
+	 */
+	List excludeThirdPartyLicenseFolder
+
 	// ############### Codenarc ##################
 
 	/**

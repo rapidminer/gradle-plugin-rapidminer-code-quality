@@ -6,5 +6,5 @@ gradlePlugin { id 'code-quality' }
 
 dependencies {
 	// https://github.com/hierynomus/license-gradle-plugin
-	compile 'com.rapidminer.gradle:license-gradle-plugin:0.11.1'
+	compile 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0'
 }

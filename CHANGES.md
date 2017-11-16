@@ -1,7 +1,13 @@
 ## Change Log
 
 #### 0.4.3
-*
+* Bumps version of 'license-gradle-plugin' to version 0.14.0
+* Adds new third party license folder check task. It can be activated to be run with the tests by specifying 
+```$xslt
+codeQuality {
+    checkThirdPartyLicensesOnTest = true
+}
+```
 
 #### 0.4.2
 * Changes 'license-gradle-plugin' back to version 0.11.1 to fix broken license header checks

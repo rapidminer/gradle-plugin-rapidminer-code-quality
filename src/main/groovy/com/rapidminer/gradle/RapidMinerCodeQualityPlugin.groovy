@@ -20,6 +20,7 @@ import com.rapidminer.gradle.codenarc.InitCodenarcConfigFiles
 import com.rapidminer.gradle.eclipse.checkstyle.CheckstyleEclipse
 import com.rapidminer.gradle.eclipse.findbugs.FindbugsEclipse
 import com.rapidminer.gradle.eclipse.pmd.PMDEclipse
+import com.rapidminer.gradle.license.CheckThirdPartyLicenses
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -77,8 +78,10 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 
 			// add header check tasks
 			if(applyPlugin(project, HEADER_CHECK, qualityExt.headerCheck)) {
-				configureHeaderCheck(project, qualityExt, configurationDir)
+				configureHeaderCheck(project, qualityExt)
 			}
+
+			configureThirdPartyLicenseCheck(project, qualityExt)
 
 			if(project.plugins.withType(GroovyPlugin)) {
 				project.logger.info("${project.name} is a Groovy project. Only checking for Groovy code quality plugins.")
@@ -256,7 +259,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 		}
 	}
 
-	private void configureHeaderCheck(Project project, CodeQualityConfiguration codeExt, File configurationDir) {
+	private void configureHeaderCheck(Project project, CodeQualityConfiguration codeExt) {
 		project.configure(project) {
 			apply plugin: 'com.github.hierynomus.license'
 
@@ -270,6 +273,22 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				ignoreFailures codeExt.headerCheckIgnoreErrors
 				includes([ALL_JAVA, ALL_GROOVY])
                 encoding = 'UTF-8'
+			}
+		}
+	}
+
+	private void configureThirdPartyLicenseCheck(Project project, CodeQualityConfiguration codeExt) {
+		project.configure(project) {
+			apply plugin: 'com.github.hierynomus.license'
+
+			Task checkLicenses = tasks.create(name: "checkThirdPartyLicenses", type: CheckThirdPartyLicenses)
+			checkLicenses.group = "license"
+			checkLicenses.excludedArtifacts = codeExt.excludedThirdPartyLicenses
+			checkLicenses.excludeArtifactsFromFolder = codeExt.excludeThirdPartyLicenseFolder
+			checkLicenses.dependsOn tasks.downloadLicenses
+
+			if(codeExt.checkThirdPartyLicensesBeforeTest) {
+				test.dependsOn checkLicenses
 			}
 		}
 	}
