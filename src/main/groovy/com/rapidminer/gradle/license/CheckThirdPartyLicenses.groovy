@@ -96,7 +96,7 @@ class CheckThirdPartyLicenses extends DefaultTask {
         def actualLicensesHash = calculateHash(actualLicenses)
         def savedLicensesHash = calculateHash(savedLicenses)
         if (savedLicensesHash != actualLicensesHash) {
-            throw new GradleException("Licenses check failed! Manual check of the licenses' content is required because there are a differences between\n" +
+            throw new GradleException("Licenses check failed! Manual check of the licenses content is required because there are differences between\n" +
                     "${savedThirdPartyLicenses}\nand\n${generatedThirdPartyLicenses}")
         }
         project.logger.info "Third party licenses check was successful!"
