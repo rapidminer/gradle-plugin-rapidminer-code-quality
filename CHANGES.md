@@ -1,5 +1,7 @@
 ## Change Log
 
+#### 0.4.5
+
 #### 0.4.4
 * Fixes plugin portal publishing issue
 
