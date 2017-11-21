@@ -1,6 +1,7 @@
 ## Change Log
 
 #### 0.4.4
+* Fixes plugin portal publishing issue
 
 #### 0.4.3
 * Bumps version of 'license-gradle-plugin' to version 0.14.0
