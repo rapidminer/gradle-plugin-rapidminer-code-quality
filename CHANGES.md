@@ -1,5 +1,7 @@
 ## Change Log
 
+#### 0.4.6
+
 #### 0.4.5
 * Use default checkstyle rule to enforce whitespace after keywords like if, while, etc.
 * Allow to configure checkstyle version via plugin configuration
