@@ -62,9 +62,7 @@
 		<module name="MethodParamPad" />
 		<module name="OperatorWrap" />
 		<module name="TypecastParenPad" />
-		<module name="WhitespaceAfter">
-			<property name="tokens" value="COMMA, SEMI" />
-		</module>
+		<module name="WhitespaceAfter" />
 
 		<!-- Checks Naming Conventions -->
 		<!-- See http://checkstyle.sourceforge.net/config_naming.html -->

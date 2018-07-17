@@ -336,7 +336,7 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 			// Version 6.17 and 6.18 break the relative workspace path in Eclipse
 			checkstyle {
 				sourceSets = [ project.sourceSets.main ]
-				toolVersion = '6.16.1'
+				toolVersion = codeQualityExt.checkstyleVersion
 				showViolations = false
 			}
 

@@ -56,6 +56,11 @@ public class CodeQualityConfiguration {
 	 */
 	boolean headerCheckUseRootConfig = true
 
+	/**
+	 * Allows to configure the version of the checkstyle engine
+	 */
+	String checkstyleVersion = "7.8.2"
+
 	// ############### Third party license check ##################
 
 	/**

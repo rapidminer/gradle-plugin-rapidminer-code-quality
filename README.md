@@ -49,6 +49,11 @@ after after all other plugins have been applied.
 		 * a multi project build environment.
 		 */
 		headerCheckUseRootConfig = true
+		
+        /**
+         * Allows to configure the version of the checkstyle engine
+         */
+		checkstyleVersion = "7.8.2"
 
 		// ############### CodeNarc ##################
 
