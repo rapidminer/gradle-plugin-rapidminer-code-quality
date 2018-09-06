@@ -1,5 +1,7 @@
 ## Change Log
 
+#### 0.4.7
+
 #### 0.4.6
 * Do not apply third-party license check task by default. Now it has to be enabled like this:
 ```aidl
