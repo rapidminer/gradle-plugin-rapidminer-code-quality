@@ -81,7 +81,9 @@ class RapidMinerCodeQualityPlugin implements Plugin<Project> {
 				configureHeaderCheck(project, qualityExt)
 			}
 
-			configureThirdPartyLicenseCheck(project, qualityExt)
+			if(qualityExt.thirdPartyLicenseCheck) {
+				configureThirdPartyLicenseCheck(project, qualityExt)
+			}
 
 			if(project.plugins.withType(GroovyPlugin)) {
 				project.logger.info("${project.name} is a Groovy project. Only checking for Groovy code quality plugins.")

@@ -1,6 +1,13 @@
 ## Change Log
 
 #### 0.4.6
+* Do not apply third-party license check task by default. Now it has to be enabled like this:
+```aidl
+codeQuality {
+    thirdPartyLicenseCheck = true
+}
+```
+If enabled the check will be run by default in case the `test` task is run.
 
 #### 0.4.5
 * Use default checkstyle rule to enforce whitespace after keywords like if, while, etc.

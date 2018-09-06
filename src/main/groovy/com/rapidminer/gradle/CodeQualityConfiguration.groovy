@@ -64,9 +64,14 @@ public class CodeQualityConfiguration {
 	// ############### Third party license check ##################
 
 	/**
+	 * Defines whether the third-party license check tasks should be added.
+	 */
+	boolean thirdPartyLicenseCheck = false
+
+	/**
 	 * Defines whether the third party license folder should be checked before test task runs
 	 */
-	boolean checkThirdPartyLicensesBeforeTest = false
+	boolean checkThirdPartyLicensesBeforeTest = true
 
 	/**
 	 * List of artifacts to ignore
